@@ -1,8 +1,7 @@
 from functools import wraps
 
-from flask import request
-
 from app.main.service.auth_helper import Auth
+from flask import request
 
 
 def authenticate_user(f):

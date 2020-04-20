@@ -9,6 +9,7 @@ class Config:
     DEBUG = False
     SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URI')
     SUPERUSER_NAME = os.getenv('SUPERUSER_NAME', "admin")
+    OMDB_API_KEY = os.getenv('OMDB_API_KEY')
 
 class DevelopmentConfig(Config):
     DEBUG = True

@@ -4,11 +4,11 @@ and relevant junction tables
 """
 import datetime
 
-from flask_bcrypt import check_password_hash, generate_password_hash
-from flask_login import UserMixin
 from sqlalchemy.sql import and_, select
 
 from app.main import db, login_manager
+from flask_bcrypt import check_password_hash, generate_password_hash
+from flask_login import UserMixin
 
 
 class User(db.Model, UserMixin):
@@ -83,4 +83,3 @@ class User(db.Model, UserMixin):
     def setVerified(self):
         self.is_verified = True
         db.session.commit()
-

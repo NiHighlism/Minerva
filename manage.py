@@ -10,14 +10,13 @@ import os
 import unittest
 from logging import getLogger
 
-from flask import current_app
-from flask_migrate import Migrate, MigrateCommand
-from flask_script import Manager
-
 from app import blueprint
 from app.main import create_app, db
 from app.main.logging_config import setup_logger
 from app.main.models import users
+from flask import current_app
+from flask_migrate import Migrate, MigrateCommand
+from flask_script import Manager
 
 setup_logger()
 LOG = getLogger(__name__)

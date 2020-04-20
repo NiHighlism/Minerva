@@ -53,16 +53,16 @@ class Movie(db.Model):
     language = db.Column(db.JSON)
     country = db.Column(db.JSON)
     awards = db.Column(db.Text)
-    imdb_rating: db.Column(db.Float)
-    rotten_tomatoes = db.Column(db.Integer)
-    metascore = db.Column(db.Integer)
+    imdb_rating: db.Column(db.String(128))
+    rotten_tomatoes = db.Column(db.String(128))
+    metascore = db.Column(db.String(128))
     poster_url = db.Column(db.String(255))
     box_office = db.Column(db.String(128))
     added_time = db.Column(db.DateTime)
 
     def __init__(self, imdb_ID, title, year, release_date, runtime, genre, director, 
                     writer, actors, plot, langauge, country, awards, 
-                    imdb_rating, rotten_tomatoes, metascore, poster_url, box_office, added_time ):
+                    imdb_rating, rotten_tomatoes, metascore, poster_url, box_office):
         
         self.imdb_ID = imdb_ID
         self.title = title
@@ -82,7 +82,11 @@ class Movie(db.Model):
         self.metascore = metascore
         self.poster_url = poster_url
         self.box_office = box_office
-        self.added_time = added_time
+        self.added_time = datetime.datetime.now()
 
         db.session.add(self)
+        db.session.commit()
+        
+    def update_col(self, key, value):
+        setattr(self, key, value)
         db.session.commit()

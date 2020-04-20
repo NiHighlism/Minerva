@@ -2,19 +2,18 @@
 from functools import wraps
 from logging import getLogger
 
-from flask import abort
-from flask import current_app as app
-from flask import g, make_response, redirect, render_template, request, url_for
-from flask_login import current_user
-from flask_login import login_user as flask_login_user
-from flask_login import logout_user as logout
-
 from app.main import db
 from app.main.models.users import User
 from app.main.util.email_verification import confirm_token, generate_confirmation_token
 from app.main.util.forms import PasswordForm
 from app.main.util.password_reset import confirm_reset_token, generate_reset_token
 from app.main.util.sendgrid import async_send_mail
+from flask import abort
+from flask import current_app as app
+from flask import g, make_response, redirect, render_template, request, url_for
+from flask_login import current_user
+from flask_login import login_user as flask_login_user
+from flask_login import logout_user as logout
 
 LOG = getLogger(__name__)
 

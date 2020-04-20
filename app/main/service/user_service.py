@@ -4,12 +4,12 @@ import datetime
 from logging import getLogger
 from random import sample
 
-from flask_login import current_user
 from sqlalchemy.orm.exc import NoResultFound
 
 from app.main import db
 from app.main.models.enums import PriorityType
 from app.main.models.users import User
+from flask_login import current_user
 
 LOG = getLogger(__name__)
 

@@ -4,11 +4,10 @@ operations such as login, logout and signup.
 
 '''
 
-from flask import abort, request
-from flask_restplus import Resource
-
 from app.main.service.auth_service import Authentication
 from app.main.util.dto import AuthDto, UserDto
+from flask import abort, request
+from flask_restplus import Resource
 
 api = AuthDto.api
 user_auth = AuthDto.user_auth

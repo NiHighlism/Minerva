@@ -62,12 +62,12 @@ class UserDto:
 class MovieDto:
     api = Namespace('movie', description='movie related operations')
     
-    genre = {'genreList' : fields.List(fields.String, description="List of all genres")}
-    director = {'directorList' : fields.List(fields.String, description="List of directors")}
-    writer = {'writerList' : fields.List(fields.String, description="List of writers")}
-    actors = {'actorsList' : fields.List(fields.String, description="List of actors")}
-    language = {'languageList' : fields.List(fields.String, description="List of languages")}
-    country = {'countryList' : fields.List(fields.String, description="Countries involved")}
+    genre = api.model('genre', {'genreList' : fields.List(fields.String)})
+    director = api.model('director', {'directorList' : fields.List(fields.String)})
+    writer = api.model('writer',{'writerList' : fields.List(fields.String)})
+    actors = api.model('actors', {'actorsList' : fields.List(fields.String)})
+    language = api.model('language', {'languageList' : fields.List(fields.String)})
+    country = api.model('country', {'countryList' : fields.List(fields.String)})
 
     movie = api.model('movie', {
         'imdb_ID' : fields.String(required=True, description="ID of the given movie on IMDB"),
@@ -82,10 +82,10 @@ class MovieDto:
         'plot' : fields.String(description="Plotline of the movie"),
         'language' : fields.Nested(language),
         'country' : fields.Nested(country),
-        'awards' : fields.String(description="Awards won or nominated"),
-        'imdb_rating' : fields.Float(description="IMDB Rating of movie"),
-        'rotten_tomatoes' : fields.Integer(description="Rotten Tomatoes score of movie"),
-        'metascore' : fields.Integer(description="Metacritic score of Movie"),
+        'awards' : fields.String(default="N/A", description="Awards won or nominated"),
+        'imdb_rating' : fields.String(default="N/A", description="IMDB Rating of movie"),
+        'rotten_tomatoes' : fields.String(default="N/A", description="Rotten Tomatoes score of movie"),
+        'metascore' : fields.String(default="N/A", description="Metacritic score of Movie"),
         'poster_url': fields.String(description="URL of poster from IMDB"),
         'box_office' : fields.String(description="Box office collection in dollars")
     })
