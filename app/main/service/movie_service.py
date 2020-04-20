@@ -17,11 +17,17 @@ class MovieService:
 
     @staticmethod
     def get_by_imdb_id(imdb_ID):
-        apikey = current_app.config['OMDB_API_KEY']
-        key_params = {'apikey' : apikey, 'i' : imdb_ID}
-
         try:
+            movie = Movie.query.filter_by(imdb_ID=imdb_ID).first()
+
+            if movie is not None:
+                print("SEEDHA DB SE UTHAYA, BADA MAZAA AAYA")
+                return movie, 200
+            
+            apikey = current_app.config['OMDB_API_KEY']
+            key_params = {'apikey' : apikey, 'i' : imdb_ID}
             base_url = "http://www.omdbapi.com"
+            
             request = requests.get(base_url, key_params)
             
             result_json = request.json()
@@ -32,6 +38,7 @@ class MovieService:
             result['year'] = result_json['Year']
             result['release_date'] = result_json['Released']
             result['runtime'] = result_json['Runtime']
+            result['plot'] = result_json['Plot']
             
             genres = result_json['Genre'].split(", ")
             result['genre'] = {"genreList" : genres}
@@ -45,12 +52,11 @@ class MovieService:
             actors = result_json['Actors'].split(", ")
             result['actors'] = {'actorsList' : actors}
 
-            result['plot'] = result_json['Plot']
             
             languages = result_json['Language'].split(", ")
             result['language'] = {'languageList' : languages}
 
-            countries = result_json['Country']
+            countries = result_json['Country'].split(", ")
             result['country'] = {'countryList' : countries}
 
             result['awards'] = result_json['Awards']
@@ -63,9 +69,8 @@ class MovieService:
             result['poster_url'] = result_json['Poster']
             result['box_office'] = result_json['BoxOffice']
             
-            
-
-            return request.json(), 200
+            movie = Movie(**result)
+            return result, 200
 
         except BaseException:
             LOG.error('Details couldn\'t be fetched for ID: {}'.format(imdb_ID), exc_info=True)

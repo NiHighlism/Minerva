@@ -43,17 +43,19 @@ class Movie(db.Model):
     imdb_ID = db.Column(db.String(128), unique=True, nullable=False)
     title =  db.Column(db.Text, nullable=False)
     year = db.Column(db.Integer)
-    release_date = db.Column(db.DateTime)
-    runtime = db.Column(db.Integer)
+    release_date = db.Column(db.String(128))
+    runtime = db.Column(db.String(128))
+    plot = db.Column(db.Text)
+    
     genre = db.Column(db.JSON)
     director = db.Column(db.JSON)
     writer = db.Column(db.JSON)
     actors = db.Column(db.JSON)
-    plot = db.Column(db.Text)
     language = db.Column(db.JSON)
     country = db.Column(db.JSON)
+    
     awards = db.Column(db.Text)
-    imdb_rating: db.Column(db.String(128))
+    imdb_rating = db.Column(db.String(128))
     rotten_tomatoes = db.Column(db.String(128))
     metascore = db.Column(db.String(128))
     poster_url = db.Column(db.String(255))
@@ -61,7 +63,7 @@ class Movie(db.Model):
     added_time = db.Column(db.DateTime)
 
     def __init__(self, imdb_ID, title, year, release_date, runtime, genre, director, 
-                    writer, actors, plot, langauge, country, awards, 
+                    writer, actors, plot, language, country, awards, 
                     imdb_rating, rotten_tomatoes, metascore, poster_url, box_office):
         
         self.imdb_ID = imdb_ID
@@ -74,7 +76,7 @@ class Movie(db.Model):
         self.writer = writer
         self.actors = actors
         self.plot = plot
-        self.language = langauge
+        self.language = language
         self.country = country
         self.awards = awards
         self.imdb_rating = imdb_rating

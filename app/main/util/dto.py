@@ -73,13 +73,13 @@ class MovieDto:
         'imdb_ID' : fields.String(required=True, description="ID of the given movie on IMDB"),
         'title' : fields.String(required=True, description="Title of the movie"),
         'year' : fields.Integer(required=True, description="Release Year of the movie"),
-        'runtime' : fields.Integer(description="Runtime in minutes"),
-        'release_date' : fields.DateTime(description="Release date"),
+        'runtime' : fields.String(description="Runtime in minutes"),
+        'release_date' : fields.String(description="Release date"),
+        'plot' : fields.String(description="Plotline of the movie"),
         'genre' : fields.Nested(genre),
         'director' : fields.Nested(director),
         'writer' : fields.Nested(writer),
         'actors' : fields.Nested(actors),
-        'plot' : fields.String(description="Plotline of the movie"),
         'language' : fields.Nested(language),
         'country' : fields.Nested(country),
         'awards' : fields.String(default="N/A", description="Awards won or nominated"),
@@ -88,11 +88,4 @@ class MovieDto:
         'metascore' : fields.String(default="N/A", description="Metacritic score of Movie"),
         'poster_url': fields.String(description="URL of poster from IMDB"),
         'box_office' : fields.String(description="Box office collection in dollars")
-    })
-
-    searchMovie = api.model('searchMovie', {
-        'title' : fields.String(required=True, description="Title of the movie"),
-        'year' : fields.Integer(description="Release year of movie"),
-        'language' : fields.String(description="Primary language of movie audio"),
-        'genre' : fields.String(description="Primary genre of the movie")
     })
