@@ -40,6 +40,10 @@ isort = "*"
 pydocstyle = "*"
 pycodestyle = "*"
 autopep8 = "*"
+python-dotenv = "*"
+sqlalchemy-json = "*"
+pytest-flask = "*"
+pytest-cov = "*"
 
 [requires]
 python_version = "3.6"

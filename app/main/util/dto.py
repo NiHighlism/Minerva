@@ -1,0 +1,98 @@
+# Data Transfer Object- Responsible for carrying data between processes
+from flask import current_app
+from flask_restplus import Namespace, fields, reqparse
+from werkzeug.datastructures import FileStorage
+
+
+class AuthDto:
+    api = Namespace('auth', description='Authentication Related operations')
+    user_auth = api.model('auth_details', {
+        'email': fields.String(required=True, description='Login Email'),
+        'password': fields.String(required=True, description='Login Password'),
+        'remember': fields.String(description='Stay Logged In'),
+    })
+
+    login_info = api.model('login_info', {
+        'id': fields.Integer(required=True, description="ID of the user."),
+        'username': fields.String(required=True, description="username of the user.")
+    })
+
+    reset_email = api.model('email_details', {
+        'email': fields.String(required=True, description='Login Email')
+    })
+
+    change_password = api.model('change_password', {
+        'oldPassword': fields.String(required=True, format='password'),
+        'newPassword': fields.String(required=True, format='password')
+    })
+
+
+class UserDto:
+    api = Namespace('user', description='user related operations')
+    user = api.model('user', {
+        'username': fields.String(required=True, description='user username'),
+        'password': fields.String(required=True, description='user password'),
+        'email': fields.String(required=True, description='user email address'),
+    })
+
+    userInfo = api.model('userInfo', {
+        'username': fields.String(required=True, description='user username'),
+        'first_name': fields.String(description='first name', default=""),
+        'last_name': fields.String(description="last name", default=""),
+        'dob': fields.DateTime(dt_format='rfc822', description="date of birth"),
+        'email': fields.String(required=True, description='user email address'),
+        'fb_handle': fields.String(description="facebook handle"),
+        'g_handle': fields.String(description="github handle"),
+        'medium_handle': fields.String(description="medium handle"),
+        'twitter_handle': fields.String(description="twitter handle"),
+        'linkedin_handle': fields.String(description="linkedin handle"),
+        'bio': fields.String(description="biography"),
+        'occupation': fields.String(description="occupation"),
+        'last_login': fields.DateTime(dt_format='rfc822', description="last login time")
+    })
+
+    payment = api.model('payment', {
+        'username': fields.String(required=True,
+                                  description='username of the payee'),
+        'amount': fields.Float(required=True, descripton="Amount paid"),
+        'api_response': fields.String(required=True,
+                                      description="Response returned by vendor")
+    })
+
+class MovieDto:
+    api = Namespace('movie', description='movie related operations')
+    
+    genre = {'genreList' : fields.List(fields.String, description="List of all genres")}
+    director = {'directorList' : fields.List(fields.String, description="List of directors")}
+    writer = {'writerList' : fields.List(fields.String, description="List of writers")}
+    actors = {'actorsList' : fields.List(fields.String, description="List of actors")}
+    language = {'languageList' : fields.List(fields.String, description="List of languages")}
+    country = {'countryList' : fields.List(fields.String, description="Countries involved")}
+
+    movie = api.model('movie', {
+        'imdb_ID' : fields.String(required=True, description="ID of the given movie on IMDB"),
+        'title' : fields.String(required=True, description="Title of the movie"),
+        'year' : fields.Integer(required=True, description="Release Year of the movie"),
+        'runtime' : fields.Integer(description="Runtime in minutes"),
+        'release_date' : fields.DateTime(description="Release date"),
+        'genre' : fields.Nested(genre),
+        'director' : fields.Nested(director),
+        'writer' : fields.Nested(writer),
+        'actors' : fields.Nested(actors),
+        'plot' : fields.String(description="Plotline of the movie"),
+        'language' : fields.Nested(language),
+        'country' : fields.Nested(country),
+        'awards' : fields.String(description="Awards won or nominated"),
+        'imdb_rating' : fields.Float(description="IMDB Rating of movie"),
+        'rotten_tomatoes' : fields.Integer(description="Rotten Tomatoes score of movie"),
+        'metascore' : fields.Integer(description="Metacritic score of Movie"),
+        'poster_url': fields.String(description="URL of poster from IMDB"),
+        'box_office' : fields.String(description="Box office collection in dollars")
+    })
+
+    searchMovie = api.model('searchMovie', {
+        'title' : fields.String(required=True, description="Title of the movie"),
+        'year' : fields.Integer(description="Release year of movie"),
+        'language' : fields.String(description="Primary language of movie audio"),
+        'genre' : fields.String(description="Primary genre of the movie")
+    })
