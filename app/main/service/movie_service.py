@@ -61,10 +61,15 @@ class MovieService:
 
             result['awards'] = result_json['Awards']
             
-            ratings = result_json['Ratings']
-            result['imdb_rating'] = ratings[0]['Value']
-            result['rotten_tomatoes'] = ratings[1]['Value']
-            result['metascore'] = ratings[2]['Value']
+            try:
+                ratings = result_json['Ratings']
+                result['imdb_rating'] = ratings[0]['Value']
+                result['rotten_tomatoes'] = ratings[1]['Value']
+                result['metascore'] = ratings[2]['Value']
+            except:
+                result['imdb_rating'] = "N/A"
+                result['rotten_tomatoes'] = "N/A"
+                result['metascore'] = "N/A"
 
             result['poster_url'] = result_json['Poster']
             result['box_office'] = result_json['BoxOffice']

@@ -12,6 +12,7 @@ from app.main.util.dto import MovieDto
 api = MovieDto.api
 movie = MovieDto.movie
 
+
 @api.route('/search/<imdb_ID>')
 class SearchIMDBID(Resource):
     """ User Login Resource """
@@ -23,5 +24,3 @@ class SearchIMDBID(Resource):
             return abort(403, resp[0])
         else:
             return resp
-
-

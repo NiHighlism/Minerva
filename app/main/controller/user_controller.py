@@ -31,3 +31,5 @@ class UpdateUserInfo(Resource):
     def post(self):
         update_dict = request.json
         return UserService.update_user_info(update_dict)
+    
+    #TODO: Superuser can't change username parameter. 
