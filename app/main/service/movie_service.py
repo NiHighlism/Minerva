@@ -36,30 +36,29 @@ class MovieService:
             result['imdb_ID'] = imdb_ID
             result['title'] = result_json['Title']
             result['year'] = result_json['Year']
-            result['release_date'] = result_json['Released']
-            result['runtime'] = result_json['Runtime']
-            result['plot'] = result_json['Plot']
+            result['release_date'] = result_json.get('Released', '')
+            result['runtime'] = result_json.get('Runtime', '')
+            result['plot'] = result_json.get('Plot', '')
             
             genres = result_json['Genre'].split(", ")
-            result['genre'] = {"genreList" : genres}
+            result['genre'] = {"genreList" : genres} 
 
             directors = result_json['Director'].split(", ")
-            result['director'] = {'directorList' : directors}
+            result['director'] = {'directorList' : directors} 
 
             writers = result_json['Writer'].split(", ")
             result['writer'] = {'writerList' : writers}
 
             actors = result_json['Actors'].split(", ")
-            result['actors'] = {'actorsList' : actors}
-
+            result['actors'] = {'actorsList' : actors} 
             
             languages = result_json['Language'].split(", ")
             result['language'] = {'languageList' : languages}
 
             countries = result_json['Country'].split(", ")
-            result['country'] = {'countryList' : countries}
+            result['country'] = {'countryList' : countries} 
 
-            result['awards'] = result_json['Awards']
+            result['awards'] = result_json.get('Awards', '')
             
             try:
                 ratings = result_json['Ratings']
@@ -71,8 +70,8 @@ class MovieService:
                 result['rotten_tomatoes'] = "N/A"
                 result['metascore'] = "N/A"
 
-            result['poster_url'] = result_json['Poster']
-            result['box_office'] = result_json['BoxOffice']
+            result['poster_url'] = result_json.get('Poster', '')
+            result['box_office'] = result_json.get('BoxOffice', '')
             
             movie = Movie(**result)
             return result, 200

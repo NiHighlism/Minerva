@@ -13,7 +13,16 @@ api = MovieDto.api
 movie = MovieDto.movie
 
 
-@api.route('/search/<imdb_ID>')
+# @api.route('/<imdb_ID')
+# class MovieJSON(Resource):
+#     """ Fetch details for movie with given ID """
+#     @api.doc("params: {'imdb_ID' : 'Movie ID on IMDB'")
+#     @api.marshal_with(movie)
+#     def get(self, imdb_ID):
+#         resp = 
+
+@api.route('/<imdb_ID>')
+@api.route('/search/id/<imdb_ID>')
 class SearchIMDBID(Resource):
     """ User Login Resource """
     @api.doc("params: {'imdb_ID' : 'Movie ID on IMDB'")
@@ -24,3 +33,11 @@ class SearchIMDBID(Resource):
             return abort(403, resp[0])
         else:
             return resp
+
+@api.route('/search')
+class SearchMovies(Resource):
+    """ Movie Search Resource """
+    @api.doc("params : {'Title' : 'Title of Movie', 'Year' : 'Release Year of movie', 'Language' : 'Release Language of movie'}")
+    @api.marshal_list_with(movie)
+    def get(self):
+        print(request.args)
