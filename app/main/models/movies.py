@@ -8,9 +8,10 @@ import json
 from sqlalchemy.sql import and_, select
 
 from app.main import db, login_manager
+from app.main.models.searches import SearchableMixin
 
 
-class Movie(db.Model):
+class Movie(SearchableMixin, db.Model):
     """
     Description of User model.
     Columns
@@ -61,6 +62,9 @@ class Movie(db.Model):
     poster_url = db.Column(db.String(255))
     box_office = db.Column(db.String(128))
     added_time = db.Column(db.DateTime)
+    
+    __searchable__ = ['title', 'year', 'genre', 'director', 'actors', 'language', 'country']
+
 
     def __init__(self, imdb_ID, title, year, release_date, runtime, genre, director, 
                     writer, actors, plot, language, country, awards, 

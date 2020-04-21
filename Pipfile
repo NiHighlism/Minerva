@@ -44,6 +44,8 @@ python-dotenv = "*"
 sqlalchemy-json = "*"
 pytest-flask = "*"
 pytest-cov = "*"
+sqlalchemy-elasticquery = "*"
+elasticsearch = "*"
 
 [requires]
 python_version = "3.6"

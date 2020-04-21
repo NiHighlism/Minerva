@@ -10,6 +10,7 @@ class Config:
     SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URI')
     SUPERUSER_NAME = os.getenv('SUPERUSER_NAME', "admin")
     OMDB_API_KEY = os.getenv('OMDB_API_KEY')
+    ELASTICSEARCH_URL = os.environ.get('ELASTICSEARCH_URL', "http://localhost:9200")
 
 class DevelopmentConfig(Config):
     DEBUG = True

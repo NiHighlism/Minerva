@@ -6,6 +6,7 @@ from flask_bcrypt import Bcrypt
 from flask_cors import CORS
 from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
+from elasticsearch import Elasticsearch
 
 LOG = getLogger(__name__)
 
@@ -35,5 +36,8 @@ def create_app(config_name):
 
     CORS(app)
     LOG.info("Flask-CORS set up succesfully!")
+    
+    app.elasticsearch = Elasticsearch([app.config['ELASTICSEARCH_URL']])
+    LOG.info("Elasticsearch set up successfully!")
 
     return app
