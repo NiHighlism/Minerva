@@ -11,6 +11,7 @@ class Config:
     SUPERUSER_NAME = os.getenv('SUPERUSER_NAME', "admin")
     OMDB_API_KEY = os.getenv('OMDB_API_KEY')
     ELASTICSEARCH_URL = os.environ.get('ELASTICSEARCH_URL', "http://localhost:9200")
+    RESULTS_PER_PAGE = os.environ.get('RESULTS_PER_PAGE', 10)
 
 class DevelopmentConfig(Config):
     DEBUG = True

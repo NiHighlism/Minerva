@@ -84,3 +84,47 @@ class MovieService:
             }
 
             return response_object, 500
+
+
+    @staticmethod
+    def search_for_movie(query, page):
+        try: 
+            print(query)
+            # body={'query': {'multi_match': {'query': query, 'fields': "*"}}}
+            
+            # r = requests.post("http://localhost:9200/movie/_search", data=body)
+            # print(r.status_code)
+            results_per_page = current_app.config['RESULTS_PER_PAGE']
+            res, totalResults = Movie.search(query, page, results_per_page)
+            res_objects = res.all()
+            
+            movie_results = [movie for movie in res_objects]            
+            return movie_results, 200
+            
+            
+        except BaseException as e:
+            LOG.error("Search query was not able to complete. Please try again later", exc_info=True)
+            response_object = {
+                'status' : 'Error',
+                'message' : 'Failed fetching details. Try later.'
+            }
+
+            return response_object, 500
+
+    @staticmethod
+    def get_total_pages(query):
+        try:
+            results_per_page = current_app.config['RESULTS_PER_PAGE']
+            res, totalResults = Movie.search(query, 1, results_per_page)
+            total_pages = int(totalResults) / int(results_per_page) or 1
+            
+            return total_pages, 200
+        
+        except BaseException:
+            LOG.error("Search query was not able to complete. Please try again later", exc_info=True)
+            response_object = {
+                'status' : 'Error',
+                'message' : 'Failed fetching details. Try later.'
+            }
+
+            return response_object, 500

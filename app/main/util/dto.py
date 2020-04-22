@@ -70,6 +70,7 @@ class MovieDto:
     country = api.model('country', {'countryList' : fields.List(fields.String)})
 
     movie = api.model('movie', {
+        'total_pages' : fields.Integer(description="Number of pages of results", default = 1),
         'imdb_ID' : fields.String(required=True, description="ID of the given movie on IMDB"),
         'title' : fields.String(required=True, description="Title of the movie"),
         'year' : fields.Integer(required=True, description="Release Year of the movie"),

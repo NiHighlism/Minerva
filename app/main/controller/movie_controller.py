@@ -13,14 +13,6 @@ api = MovieDto.api
 movie = MovieDto.movie
 
 
-# @api.route('/<imdb_ID')
-# class MovieJSON(Resource):
-#     """ Fetch details for movie with given ID """
-#     @api.doc("params: {'imdb_ID' : 'Movie ID on IMDB'")
-#     @api.marshal_with(movie)
-#     def get(self, imdb_ID):
-#         resp = 
-
 @api.route('/<imdb_ID>')
 @api.route('/search/id/<imdb_ID>')
 class SearchIMDBID(Resource):
@@ -37,7 +29,23 @@ class SearchIMDBID(Resource):
 @api.route('/search')
 class SearchMovies(Resource):
     """ Movie Search Resource """
-    @api.doc("params : {'Title' : 'Title of Movie', 'Year' : 'Release Year of movie', 'Language' : 'Release Language of movie'}")
+    @api.doc("params : {'Query' : 'Search Query'}")
     @api.marshal_list_with(movie)
     def get(self):
-        print(request.args)
+        query = request.args.get("q")
+        page = request.args.get("page") or 1
+        resp = MovieService.search_for_movie(query, page)
+        if resp[1] != 200:
+            return abort(403, resp[1])
+        else:
+            return resp
+
+@api.route('/search/pages')
+class NumberOfPages(Resource):
+    def get(self):
+        query = request.args.get("q")
+        resp = MovieService.get_total_pages(query)
+        if resp[1] != 200:
+            return abort(403, resp[1])
+        else:
+            return resp

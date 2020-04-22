@@ -1,4 +1,7 @@
 from flask import current_app
+from logging import getLogger
+
+LOG = getLogger(__name__)
 
 def create_index(index, model):
     payload = {
@@ -61,11 +64,28 @@ def remove_from_index(index, model):
     current_app.elasticsearch.delete(index=index, id=model.id)
 
 def query_index(index, query, page, per_page):
+    page = int(page)
+    per_page = int(per_page)
+
     if not current_app.elasticsearch:
         return [], 0
-    search = current_app.elasticsearch.search(
-        index=index,
-        body={'query': {'multi_match': {'query': query, 'fields': ['*']}},
-              'from': (page - 1) * per_page, 'size': per_page})
-    ids = [int(hit['_id']) for hit in search['hits']['hits']]
-    return ids, search['hits']['total']['value']
+    try:
+        search = current_app.elasticsearch.search(
+            index=index,
+            body = {
+                'query': {
+                    'multi_match': {
+                        'query': query, 
+                        'fields': ["title^2", "year^1", "*"]
+                        }
+                    },
+                    "from" : (page - 1) * per_page,
+                    "size" : per_page
+                })
+        ids = [int(hit['_id']) for hit in search['hits']['hits']]
+        return ids, search['hits']['total']['value']
+    
+    except Exception as e:
+        LOG.error("FUCKED UP", exc_info=True)
+        
+    
