@@ -55,7 +55,7 @@ class Authentication:
                         remem = False
                     flask_login_user(user, remember=remem)
                     response_object = {
-                        'status': 'Success',
+                        'status': 'success',
                         'message': 'Successfully logged in.',
                     }
                     login_info = {
@@ -95,7 +95,7 @@ class Authentication:
                 return response_object, 300
             logout()
             response_object = {
-                'status': 'Success',
+                'status': 'success',
                 'message': 'Logged Out Successfully',
             }
             return response_object, 200
@@ -108,12 +108,12 @@ class Authentication:
             return response_object, 500
 
     @staticmethod
-    def signup_user(data):
+    def signup_user(data, send_mail=True):
         try:
             user = User.query.filter_by(email=data.get('email')).first()
             if user is not None:
                 response_object = {
-                    'status': 'Invalid',
+                    'status': 'invalid',
                     'message': 'Email Already Registered',
                 }
                 LOG.info(
@@ -122,7 +122,7 @@ class Authentication:
             user = User.query.filter_by(username=data.get('username')).first()
             if user is not None:
                 response_object = {
-                    'status': 'Invalid',
+                    'status': 'invalid',
                     'message': 'Username Already Taken',
                 }
                 LOG.info(
@@ -132,15 +132,16 @@ class Authentication:
             user = User(data.get('username'),
                         data.get('password'), data.get('email'))
 
-            resp = Authentication.send_verification(data.get('email'))
-            if resp[1] != 200:
-                User.query.filter_by(email=data.get('email')).delete()
-                db.session.commit()
-                raise BaseException
-        
+            if send_mail != "no":
+                resp = Authentication.send_verification(data.get('email'))
 
+                if resp[1] != 200:
+                    User.query.filter_by(email=data.get('email')).delete()
+                    db.session.commit()
+                    raise BaseException
+        
             response_object = {
-                'status': 'Success',
+                'status': 'success',
                 'message': 'User added Successfully',
             }
             return response_object, 200
@@ -230,7 +231,7 @@ IIT Tech Ambit""")
             }
         else:
             response_object = {
-                'status': 'Success',
+                'status': 'success',
                 'message': 'Email Already Verified',
             }
         return response_object, 200

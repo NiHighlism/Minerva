@@ -51,7 +51,8 @@ class SignUp(Resource):
     @api.expect(user, validate=True)
     def post(self):
         post_data = request.json
-        resp = Authentication.signup_user(data=post_data)
+        send_mail = request.args.get('send_mail')
+        resp = Authentication.signup_user(data=post_data, send_mail=send_mail)
         if resp[1] != 200:
             return abort(403, resp[0])
         else:

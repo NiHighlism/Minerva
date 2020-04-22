@@ -4,50 +4,59 @@ from logging import getLogger
 LOG = getLogger(__name__)
 
 def create_index(index, model):
-    payload = {
-    "settings" : {
-        "number_of_replicas" : 1
-    },
-    "mappings" : {
-        "properties" : {
-            "title" : { 
-                "type" : "text" 
-            },
-            "year" : {
-                "type" : "long"
-            },
-            "actor" : {
-                "type" : "nested", 
-                "properties" : {
-                    "actorList" : {
-                    "type" : "text"
-                }}
-            },
-            "country" : {
-                "type" : "nested", 
-                "properties" : {
-                    "countryList" : {
-                    "type" : "text"
-                }}
-            },
-            "director" : {
-                "type" : "nested", 
-                "properties" : {
-                    "directorList" : {
-                    "type" : "text"
-                }}
-            },
-            "language" : {
-                "type" : "nested", 
-                "properties" : {
-                    "languageList" : {
-                    "type" : "text"
-                }}
+    es = current_app.elasticsearch
+    es.indices.delete(index=index, ignore=[400, 404])
+
+    try:
+        payload = {
+        "settings" : {
+            "number_of_replicas" : 1
+        },
+        "mappings" : {
+            "properties" : {
+                "title" : { 
+                    "type" : "text" 
+                },
+                "year" : {
+                    "type" : "long"
+                },
+                "actor" : {
+                    "type" : "nested", 
+                    "properties" : {
+                        "actorList" : {
+                        "type" : "text"
+                    }}
+                },
+                "country" : {
+                    "type" : "nested", 
+                    "properties" : {
+                        "countryList" : {
+                        "type" : "text"
+                    }}
+                },
+                "director" : {
+                    "type" : "nested", 
+                    "properties" : {
+                        "directorList" : {
+                        "type" : "text"
+                    }}
+                },
+                "language" : {
+                    "type" : "nested", 
+                    "properties" : {
+                        "languageList" : {
+                        "type" : "text"
+                    }}
+                }
+            }
             }
         }
-        }
-    }
-    current_app.elasticsearch.indices.create(index=index, body=payload)
+        es.indices.create(index=index, body=payload)
+        return True
+    
+    except BaseException:
+        LOG.error("Elastic Search Index couldn't be create. Try again later.", exc_info=True) 
+        return False
 
 def add_to_index(index, model):
     if not current_app.elasticsearch:

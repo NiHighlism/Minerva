@@ -12,15 +12,15 @@ userInfo = UserDto.userInfo
 payment = UserDto.payment
 
 
-@api.route('/')
+@api.route('/<id>')
 class GetUserDetails(Resource):
     """ Fetch details of user by id """
     @api.doc('Endpoint to fetch details of a user by id')
     @api.marshal_with(userInfo, envelope='resource')
     @api.doc(params={'id': 'Id of the requested user'})
-    def get(self):
+    def get(self, id):
         # Fetching the user id
-        return UserService.get_by_id(id=request.args.get('id'))
+        return UserService.get_by_id(id)
 
 
 @api.route("/update")

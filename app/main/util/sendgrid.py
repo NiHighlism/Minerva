@@ -46,10 +46,24 @@ def send_mail(to_mail, mail_subject, mail_body):
         LOG.info(response.status_code)
         LOG.info(response.body)
         LOG.info(response.headers)
+
+        response_object = {
+            'status' : 'success', 
+            'message' : 'Mail sent successfully'
+        }
+
+        return response_object, 200
+
     except Exception as e:
+        print(e)
         LOG.error("Mail to {} regarding {} failed. ".format(
             to_mail, mail_subject), exc_info=True)
 
+        response_object = {
+            'status' : 'fail',
+            'message' : 'Mail could\'nt be sent. Please try again later. '
+        }
+        return response_object, 500
 
 def subscribe_newsletter(email):
     """
