@@ -6,6 +6,7 @@ from app.main import db
 from app.main.models.users import User
 from app.test.base import BaseTestCase
 
+
 def add_user(self):
     return self.client.post(
         '/auth/signup?send_mail=no',
@@ -33,22 +34,22 @@ def login_user(self):
 class TestAuth(BaseTestCase):
 
     def test_user_login(self):
-            """ Test for login of registered-user login """
-            
-            with self.client:
-                user_response = add_user(self)
-                response_data = json.loads(user_response.data.decode())
-                self.assertTrue(response_data['status'] == 'success')
-                self.assertEqual(user_response.status_code, 200)
+        """ Test for login of registered-user login """
 
-                user = User.query.filter_by(email="example@gmail.com").first()
-                user.is_verified=1
-                db.session.commit()
+        with self.client:
+            user_response = add_user(self)
+            response_data = json.loads(user_response.data.decode())
+            self.assertTrue(response_data['status'] == 'success')
+            self.assertEqual(user_response.status_code, 200)
 
-                login_response = login_user(self)
-                data = json.loads(login_response.data.decode())
-                self.assertTrue(data['username'] == "test_username")
-                self.assertEqual(login_response.status_code, 200)
+            user = User.query.filter_by(email="example@gmail.com").first()
+            user.is_verified = 1
+            db.session.commit()
+
+            login_response = login_user(self)
+            data = json.loads(login_response.data.decode())
+            self.assertTrue(data['username'] == "test_username")
+            self.assertEqual(login_response.status_code, 200)
 
     def test_valid_logout(self):
         """ Test for logout """
@@ -58,11 +59,10 @@ class TestAuth(BaseTestCase):
             response_data = json.loads(user_response.data.decode())
             self.assertTrue(response_data['status'])
             self.assertEqual(user_response.status_code, 200)
-            
-            user = User.query.filter_by(email="example@gmail.com").first()
-            user.is_verified=1
-            db.session.commit()
 
+            user = User.query.filter_by(email="example@gmail.com").first()
+            user.is_verified = 1
+            db.session.commit()
 
             login_response = login_user(self)
             data = json.loads(login_response.data.decode())
@@ -76,6 +76,7 @@ class TestAuth(BaseTestCase):
             data = json.loads(response.data.decode())
             self.assertTrue(data['status'] == 'success')
             self.assertEqual(response.status_code, 200)
+
 
 if __name__ == '__main__':
     unittest.main()

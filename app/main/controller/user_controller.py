@@ -1,9 +1,10 @@
 # endpoint for user operations
-from app.main.service.user_service import UserService
-from app.main.util.dto import AuthDto, UserDto
-from flask import request
+from flask import abort, request
 from flask_login import current_user, login_required
 from flask_restplus import Resource
+
+from app.main.service.user_service import UserService
+from app.main.util.dto import AuthDto, UserDto
 
 api = UserDto.api
 user_auth = AuthDto.user_auth
@@ -31,5 +32,33 @@ class UpdateUserInfo(Resource):
     def post(self):
         update_dict = request.json
         return UserService.update_user_info(update_dict)
-    
-    #TODO: Superuser can't change username parameter. 
+
+    # TODO: Superuser can't change username parameter.
+
+
+@api.route("/add/watch")
+class AddMovieWatchList(Resource):
+    @login_required
+    @api.doc(params={"imdb_ID": "IMDB ID of movie to be added. "})
+    def get(self):
+        imdb_ID = request.args.get("imdb_ID")
+        resp = UserService.add_to_watch_list(imdb_ID)
+
+        if resp[1] != 200:
+            return abort(403, resp[0])
+        else:
+            return resp
+
+
+@api.route("/add/bucket")
+class AddMovieBucketList(Resource):
+    @login_required
+    @api.doc(params={"imdb_ID": "IMDB ID of movie to be added. "})
+    def get(self):
+        imdb_ID = request.args.get("imdb_ID")
+        resp = UserService.add_to_bucket_list(imdb_ID)
+
+        if resp[1] != 200:
+            return abort(403, resp[0])
+        else:
+            return resp

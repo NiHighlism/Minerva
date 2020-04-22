@@ -1,9 +1,10 @@
 from logging import getLogger
 
-from app.main.util.process import make_async
 from flask import Flask, current_app
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
+
+from app.main.util.process import make_async
 
 app = Flask(__name__)
 LOG = getLogger(__name__)
@@ -48,8 +49,8 @@ def send_mail(to_mail, mail_subject, mail_body):
         LOG.info(response.headers)
 
         response_object = {
-            'status' : 'success', 
-            'message' : 'Mail sent successfully'
+            'status': 'success',
+            'message': 'Mail sent successfully'
         }
 
         return response_object, 200
@@ -60,10 +61,11 @@ def send_mail(to_mail, mail_subject, mail_body):
             to_mail, mail_subject), exc_info=True)
 
         response_object = {
-            'status' : 'fail',
-            'message' : 'Mail could\'nt be sent. Please try again later. '
+            'status': 'fail',
+            'message': 'Mail could\'nt be sent. Please try again later. '
         }
         return response_object, 500
+
 
 def subscribe_newsletter(email):
     """

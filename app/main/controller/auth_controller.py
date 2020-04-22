@@ -4,10 +4,11 @@ operations such as login, logout and signup.
 
 '''
 
-from app.main.service.auth_service import Authentication
-from app.main.util.dto import AuthDto, UserDto
 from flask import abort, request
 from flask_restplus import Resource
+
+from app.main.service.auth_service import Authentication
+from app.main.util.dto import AuthDto, UserDto
 
 api = AuthDto.api
 user_auth = AuthDto.user_auth
@@ -65,7 +66,6 @@ class SendVerificationEmail(Resource):
     @api.doc('Endpoint for sending a verification mail to the user')
     def post(self):
         return Authentication.resend_verification()
-
 
 
 @api.route('/confirm/<token>', methods=['GET'])

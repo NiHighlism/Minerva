@@ -4,8 +4,8 @@ import unittest
 from flask import current_app
 from flask_testing import TestCase
 
-from manage import app
 from app.main.config import basedir
+from manage import app
 
 
 class TestDevelopmentConfig(TestCase):
@@ -31,7 +31,8 @@ class TestTestingConfig(TestCase):
         self.assertFalse(app.config['SECRET_KEY'] is '')
         self.assertTrue(app.config['DEBUG'])
         self.assertTrue(
-            app.config['SQLALCHEMY_DATABASE_URI'] == os.getenv('TESTING_DATABASE_URI')
+            app.config['SQLALCHEMY_DATABASE_URI'] == os.getenv(
+                'TESTING_DATABASE_URI')
         )
 
 

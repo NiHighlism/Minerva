@@ -1,24 +1,24 @@
-import unittest
 import datetime
-
+import unittest
 
 from app.main import db
 from app.main.models.movies import Movie
+from app.main.util.search import create_index
 from app.test.base import BaseTestCase
-from app.main.util.search import (create_index)
 
 
 class TestMovieModel(BaseTestCase):
 
     def test_movie_model(self):
-     
+
         movie_object = {
             "imdb_ID": "tt1596363",
             "title": "The Big Short",
             "year": 2015,
             "runtime": "130 min",
             "release_date": "23 Dec 2015",
-            "plot": "In 2006-2007 a group of investors bet against the US mortgage market. In their research they discover how flawed and corrupt the market is.",
+            "plot": """In 2006-2007 a group of investors bet against the US mortgage market. 
+                    In their research they discover how flawed and corrupt the market is.""",
             "genre": {
                 "genreList": [
                     "Biography",
@@ -37,7 +37,7 @@ class TestMovieModel(BaseTestCase):
                     "Charles Randolph (screenplay by)",
                     "Adam McKay (screenplay by)",
                     "Michael Lewis (based upon the book by)"
-                ]   
+                ]
             },
             "actors": {
                 "actorsList": [
@@ -71,9 +71,8 @@ class TestMovieModel(BaseTestCase):
         movieRes = Movie.query.filter_by(imdb_ID="tt1596363").first()
         self.assertTrue(isinstance(movieRes, Movie))
 
-    
     def test_elastic_model(self):
-        
+
         resp = create_index("testing_movie", Movie)
         self.assertTrue(resp)
 

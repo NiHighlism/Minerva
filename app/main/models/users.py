@@ -1,14 +1,15 @@
 """
-DB Model for Users table 
+DB Model for Users table
 and relevant junction tables
 """
 import datetime
 
+from flask_bcrypt import check_password_hash, generate_password_hash
+from flask_login import UserMixin
 from sqlalchemy.sql import and_, select
 
 from app.main import db, login_manager
-from flask_bcrypt import check_password_hash, generate_password_hash
-from flask_login import UserMixin
+from app.main.models.movies import Movie
 
 
 class User(db.Model, UserMixin):
@@ -28,6 +29,8 @@ class User(db.Model, UserMixin):
     :bio: text
     :occupation: varchar(255)
     :profile_picture: int
+    :watch_list: Relationship
+    :bucket_list: Relationship
     :last_login: timestamp
     :creation_time: timestamp
     :is_verified: boolean
@@ -49,6 +52,10 @@ class User(db.Model, UserMixin):
     last_login = db.Column(db.DateTime)
     creation_time = db.Column(db.DateTime)
     is_verified = db.Column(db.Boolean, default=False)
+
+    # Relationships
+    watch_list = db.relationship('Movie', backref="user")
+    bucket_list = db.relationship('Movie', backref="User")
 
     def __init__(self, username, password, email):
         self.username = username
@@ -76,10 +83,20 @@ class User(db.Model, UserMixin):
         # Pass in a hashed password
         self.password = generate_password_hash(newPassword)
         db.session.commit()
-    
+
     def isVerified(self):
         return self.is_verified
 
     def setVerified(self):
         self.is_verified = True
+        db.session.commit()
+
+    def add_to_watch_list(self, imdb_ID):
+        movie = Movie.query.filter_by(imdb_ID=imdb_ID).first()
+        self.watch_list.append(movie)
+        db.session.commit()
+
+    def add_to_bucket_list(self, imdb_ID):
+        movie = Movie.query.filter_by(imdb_ID=imdb_ID).first()
+        self.bucket_list.append(movie)
         db.session.commit()

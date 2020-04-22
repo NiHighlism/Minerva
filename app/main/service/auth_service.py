@@ -2,18 +2,19 @@
 from functools import wraps
 from logging import getLogger
 
-from app.main import db
-from app.main.models.users import User
-from app.main.util.email_verification import confirm_token, generate_confirmation_token
-from app.main.util.forms import PasswordForm
-from app.main.util.password_reset import confirm_reset_token, generate_reset_token
-from app.main.util.sendgrid import async_send_mail
 from flask import abort
 from flask import current_app as app
 from flask import g, make_response, redirect, render_template, request, url_for
 from flask_login import current_user
 from flask_login import login_user as flask_login_user
 from flask_login import logout_user as logout
+
+from app.main import db
+from app.main.models.users import User
+from app.main.util.email_verification import confirm_token, generate_confirmation_token
+from app.main.util.forms import PasswordForm
+from app.main.util.password_reset import confirm_reset_token, generate_reset_token
+from app.main.util.sendgrid import async_send_mail
 
 LOG = getLogger(__name__)
 
@@ -139,7 +140,7 @@ class Authentication:
                     User.query.filter_by(email=data.get('email')).delete()
                     db.session.commit()
                     raise BaseException
-        
+
             response_object = {
                 'status': 'success',
                 'message': 'User added Successfully',
@@ -161,7 +162,7 @@ class Authentication:
             if current_user.is_authenticated:
                 email = current_user.email
                 return Authentication.send_verification(email)
-        except BaseException: 
+        except BaseException:
             LOG.error('Verification mail couldn\'t be sent', exc_info=True)
             response_object = {
                 'status': 'fail',
@@ -169,15 +170,14 @@ class Authentication:
             }
             return response_object, 500
 
-
     @staticmethod
     def send_verification(email):
         try:
             user = User.query.filter_by(email=email).first()
             if user.isVerified():
                 response_object = {
-                    'status' : 'Error',
-                    'message' : 'Already verified'
+                    'status': 'Error',
+                    'message': 'Already verified'
                 }
                 return response_object, 400
 
@@ -185,7 +185,8 @@ class Authentication:
             subject = "IIT Tech Ambit: Confirm Your Email Address"
             confirm_url = url_for('api.auth_confirm_token',
                                   token=token, _external=True)
-            print("Confirmation URL for {}: {}".format(user.username, confirm_url))
+            print("Confirmation URL for {}: {}".format(
+                user.username, confirm_url))
             async_send_mail(app._get_current_object(),
                             user.email, subject,
                             f"""Hey {user.username}<br/><br/>
@@ -195,8 +196,8 @@ DevOps Team<br/>
 IIT Tech Ambit""")
 
             response_object = {
-                'status' : 'Success',
-                'Message' : 'Verification Mail Sent successfully'
+                'status': 'Success',
+                'Message': 'Verification Mail Sent successfully'
             }
             return response_object, 200
 

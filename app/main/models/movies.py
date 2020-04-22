@@ -17,9 +17,10 @@ class Movie(SearchableMixin, db.Model):
     Columns
     -----------
     :id: int [pk]
+    :user_id: int [foreign key]
     :imdb_ID: varchar(128) [not NULL]
     :title: Text [not NULL]
-    :year: int 
+    :year: int
     :release_date: DateTime
     :runtime: int
     :genre: JSON
@@ -41,20 +42,21 @@ class Movie(SearchableMixin, db.Model):
 
     # Columns
     id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
     imdb_ID = db.Column(db.String(128), unique=True, nullable=False)
-    title =  db.Column(db.Text, nullable=False)
+    title = db.Column(db.Text, nullable=False)
     year = db.Column(db.Integer)
     release_date = db.Column(db.String(128))
     runtime = db.Column(db.String(128))
     plot = db.Column(db.Text)
-    
+
     genre = db.Column(db.JSON)
     director = db.Column(db.JSON)
     writer = db.Column(db.JSON)
     actors = db.Column(db.JSON)
     language = db.Column(db.JSON)
     country = db.Column(db.JSON)
-    
+
     awards = db.Column(db.Text)
     imdb_rating = db.Column(db.String(128))
     rotten_tomatoes = db.Column(db.String(128))
@@ -62,14 +64,14 @@ class Movie(SearchableMixin, db.Model):
     poster_url = db.Column(db.String(255))
     box_office = db.Column(db.String(128))
     added_time = db.Column(db.DateTime)
-    
-    __searchable__ = ['title', 'year', 'genre', 'director', 'actors', 'language', 'country']
 
+    __searchable__ = ['title', 'year', 'genre',
+                      'director', 'actors', 'language', 'country']
 
-    def __init__(self, imdb_ID, title, year, release_date, runtime, genre, director, 
-                    writer, actors, plot, language, country, awards, 
-                    imdb_rating, rotten_tomatoes, metascore, poster_url, box_office):
-        
+    def __init__(self, imdb_ID, title, year, release_date, runtime, genre, director,
+                 writer, actors, plot, language, country, awards,
+                 imdb_rating, rotten_tomatoes, metascore, poster_url, box_office):
+
         self.imdb_ID = imdb_ID
         self.title = title
         self.year = year
@@ -92,7 +94,7 @@ class Movie(SearchableMixin, db.Model):
 
         db.session.add(self)
         db.session.commit()
-        
+
     def update_col(self, key, value):
         setattr(self, key, value)
         db.session.commit()

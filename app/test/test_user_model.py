@@ -1,6 +1,5 @@
-import unittest
 import datetime
-
+import unittest
 
 from app.main import db
 from app.main.models.users import User
@@ -16,12 +15,11 @@ class TestUserModel(BaseTestCase):
             email='test@test.com',
             password='idk@test'
         )
-        
+
         db.session.add(user)
-        
+
         userRes = User.query.filter_by(username="test123").first()
         self.assertTrue(isinstance(userRes, User))
-
 
 
 if __name__ == '__main__':

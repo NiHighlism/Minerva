@@ -2,19 +2,14 @@
 
 import datetime
 from logging import getLogger
-from random import sample
 
-from sqlalchemy.orm.exc import NoResultFound
-
-from app.main import db
-from app.main.models.enums import PriorityType
-from app.main.models.users import User
 from flask_login import current_user
 
+from app.main import db
+from app.main.models.movies import Movie
+from app.main.models.users import User
+
 LOG = getLogger(__name__)
-
-
-TAG_ID_INDEX = 1
 
 
 class UserService:
@@ -41,10 +36,10 @@ class UserService:
             }
             return response_object, 500
 
-
     @staticmethod
     def update_user_info(update_dict):
-        LOG.info('update_dict for user {}: {}'.format(current_user.username, update_dict))
+        LOG.info('update_dict for user {}: {}'.format(
+            current_user.username, update_dict))
         try:
             user = User.query.filter_by(id=current_user.id).first()
             if user is None:
@@ -58,7 +53,7 @@ class UserService:
                 return response_object, 300
 
             for key in update_dict:
-                    user.update_col(key, update_dict[key])
+                user.update_col(key, update_dict[key])
 
             response_object = {
                 'status': 'Success',
@@ -103,4 +98,62 @@ class UserService:
                 'status': 'fail',
                 'message': 'Try again',
             }
+            return response_object, 500
+
+    @staticmethod
+    def add_to_watch_list(imdb_ID):
+        try:
+            user = User.query.filter_by(id=current_user.id).first()
+            movie = Movie.query.filter_by(imdb_ID=imdb_ID).first()
+
+            watch_list = user.watch_list
+
+            if movie in watch_list:
+                response_object = {
+                    'status': 'success',
+                    'message': 'Movie exists already in watch list'
+                }
+                return response_object, 200
+
+            user.add_to_watch_list(imdb_ID)
+            response_object = {
+                'status': 'success',
+                'message': 'Movie added successfully'
+            }
+
+            return response_object, 200
+
+        except Exception:
+            LOG.error("Movie couldn't be added to List.", exc_info=True)
+            response_object = {
+                'status': 'fail',
+                'message': 'Try again later. '
+            }
+
+            return response_object, 500
+
+    @staticmethod
+    def add_to_bucket_list(imdb_ID):
+        try:
+            user = User.query.filter_by(id=current_user.id).first()
+            movie = Movie.query.filter_by(imdb_ID=imdb_ID).first()
+
+            bucket_list = user.bucket_list
+
+            if movie in bucket_list:
+                response_object = {
+                    'status': 'success',
+                    'message': 'Movie exists already in bucket list'
+                }
+                return response_object, 200
+
+            user.add_to_bucket_list(imdb_ID)
+
+        except Exception:
+            LOG.error("Movie couldn't be added to List.", exc_info=True)
+            response_object = {
+                'status': 'fail',
+                'message': 'Try again later. '
+            }
+
             return response_object, 500

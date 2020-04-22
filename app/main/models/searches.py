@@ -1,5 +1,6 @@
-from app.main.util.search import add_to_index, remove_from_index, query_index
 from app.main import db
+from app.main.util.search import add_to_index, query_index, remove_from_index
+
 
 class SearchableMixin(object):
     @classmethod
@@ -39,6 +40,7 @@ class SearchableMixin(object):
         count = 0
         for obj in cls.query:
             add_to_index(cls.__tablename__, obj)
+
 
 db.event.listen(db.session, 'before_commit', SearchableMixin.before_commit)
 db.event.listen(db.session, 'after_commit', SearchableMixin.after_commit)

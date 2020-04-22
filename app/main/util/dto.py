@@ -59,34 +59,37 @@ class UserDto:
                                       description="Response returned by vendor")
     })
 
+
 class MovieDto:
     api = Namespace('movie', description='movie related operations')
-    
-    genre = api.model('genre', {'genreList' : fields.List(fields.String)})
-    director = api.model('director', {'directorList' : fields.List(fields.String)})
-    writer = api.model('writer',{'writerList' : fields.List(fields.String)})
-    actors = api.model('actors', {'actorsList' : fields.List(fields.String)})
-    language = api.model('language', {'languageList' : fields.List(fields.String)})
-    country = api.model('country', {'countryList' : fields.List(fields.String)})
+
+    genre = api.model('genre', {'genreList': fields.List(fields.String)})
+    director = api.model(
+        'director', {'directorList': fields.List(fields.String)})
+    writer = api.model('writer', {'writerList': fields.List(fields.String)})
+    actors = api.model('actors', {'actorsList': fields.List(fields.String)})
+    language = api.model(
+        'language', {'languageList': fields.List(fields.String)})
+    country = api.model('country', {'countryList': fields.List(fields.String)})
 
     movie = api.model('movie', {
-        'total_pages' : fields.Integer(description="Number of pages of results", default = 1),
-        'imdb_ID' : fields.String(required=True, description="ID of the given movie on IMDB"),
-        'title' : fields.String(required=True, description="Title of the movie"),
-        'year' : fields.Integer(required=True, description="Release Year of the movie"),
-        'runtime' : fields.String(description="Runtime in minutes"),
-        'release_date' : fields.String(description="Release date"),
-        'plot' : fields.String(description="Plotline of the movie"),
-        'genre' : fields.Nested(genre),
-        'director' : fields.Nested(director),
-        'writer' : fields.Nested(writer),
-        'actors' : fields.Nested(actors),
-        'language' : fields.Nested(language),
-        'country' : fields.Nested(country),
-        'awards' : fields.String(default="N/A", description="Awards won or nominated"),
-        'imdb_rating' : fields.String(default="N/A", description="IMDB Rating of movie"),
-        'rotten_tomatoes' : fields.String(default="N/A", description="Rotten Tomatoes score of movie"),
-        'metascore' : fields.String(default="N/A", description="Metacritic score of Movie"),
+        'total_pages': fields.Integer(description="Number of pages of results", default=1),
+        'imdb_ID': fields.String(required=True, description="ID of the given movie on IMDB"),
+        'title': fields.String(required=True, description="Title of the movie"),
+        'year': fields.Integer(required=True, description="Release Year of the movie"),
+        'runtime': fields.String(description="Runtime in minutes"),
+        'release_date': fields.String(description="Release date"),
+        'plot': fields.String(description="Plotline of the movie"),
+        'genre': fields.Nested(genre),
+        'director': fields.Nested(director),
+        'writer': fields.Nested(writer),
+        'actors': fields.Nested(actors),
+        'language': fields.Nested(language),
+        'country': fields.Nested(country),
+        'awards': fields.String(default="N/A", description="Awards won or nominated"),
+        'imdb_rating': fields.String(default="N/A", description="IMDB Rating of movie"),
+        'rotten_tomatoes': fields.String(default="N/A", description="Rotten Tomatoes score of movie"),
+        'metascore': fields.String(default="N/A", description="Metacritic score of Movie"),
         'poster_url': fields.String(description="URL of poster from IMDB"),
-        'box_office' : fields.String(description="Box office collection in dollars")
+        'box_office': fields.String(description="Box office collection in dollars")
     })

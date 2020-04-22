@@ -1,16 +1,15 @@
-import unittest
 import datetime
-
+import unittest
 
 from app.main import db
 from app.main.models.movies import Movie
+from app.main.util.search import query_index
 from app.test.base import BaseTestCase
-from app.main.util.search import (query_index)
 
 
 class TestMovieSearch(BaseTestCase):
 
-    def test_movie_model(self): 
+    def test_movie_model(self):
         movie_object = {
             "imdb_ID": "tt1596363",
             "title": "The Big Short",
@@ -36,7 +35,7 @@ class TestMovieSearch(BaseTestCase):
                     "Charles Randolph (screenplay by)",
                     "Adam McKay (screenplay by)",
                     "Michael Lewis (based upon the book by)"
-                ]   
+                ]
             },
             "actors": {
                 "actorsList": [
@@ -70,11 +69,10 @@ class TestMovieSearch(BaseTestCase):
         movieRes = Movie.query.filter_by(imdb_ID="tt1596363").first()
         self.assertTrue(isinstance(movieRes, Movie))
 
-    
     def search_movie(self):
         res, total = query_index("The Big Short", 1, 5)
         movie = res.first()
-        
+
         self.assertTrue(movie.title == "The Big Short")
         self.assertTrue(movie.year == 2015)
 

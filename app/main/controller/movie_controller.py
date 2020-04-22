@@ -3,7 +3,7 @@ All Endpoints required for movie
 operations such as adding and fetching from DB.
 
 '''
-from flask import abort, jsonify, request, current_app
+from flask import abort, current_app, jsonify, request
 from flask_restplus import Resource
 
 from app.main.service.movie_service import MovieService
@@ -26,6 +26,7 @@ class SearchIMDBID(Resource):
         else:
             return resp
 
+
 @api.route('/search')
 class SearchMovies(Resource):
     """ Movie Search Resource """
@@ -39,6 +40,7 @@ class SearchMovies(Resource):
             return abort(403, resp[1])
         else:
             return resp
+
 
 @api.route('/search/pages')
 class NumberOfPages(Resource):
