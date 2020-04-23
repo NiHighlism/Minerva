@@ -9,9 +9,9 @@ from flask_login import UserMixin
 from sqlalchemy.sql import and_, select
 
 from app.main import db, login_manager
+from app.main.models.comments import Comment
 from app.main.models.movies import Movie
 from app.main.models.posts import Post
-from app.main.models.comments import Comment
 
 
 class User(db.Model, UserMixin):

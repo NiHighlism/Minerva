@@ -17,7 +17,7 @@ movie = MovieDto.movie
 @api.route('/search/id/<imdb_ID>')
 class SearchIMDBID(Resource):
     """ User Login Resource """
-    @api.doc("params: {'imdb_ID' : 'Movie ID on IMDB'")
+    @api.doc("params: {'imdb_ID' : 'Movie ID on IMDB'}")
     @api.marshal_with(movie)
     def get(self, imdb_ID):
         resp = MovieService.get_by_imdb_id(imdb_ID)

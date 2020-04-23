@@ -30,6 +30,8 @@ class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.Text, nullable=False)
     author_id = db.Column(db.Integer, db.ForeignKey("user.id"))
+    upvotes = db.Column(db.Integer, default=0)
+    downvotes = db.Column(db.Integer, default=0)
     creation_time = db.Column(db.DateTime, default=datetime.datetime.now())
     last_edit_time = db.Column(db.DateTime, default=datetime.datetime.now())
     post_body = db.Column(db.Text)
@@ -37,9 +39,25 @@ class Post(db.Model):
     # Relationships
     comments = db.relationship('Comment', backref="post")
 
-    def __init__(self):
-        pass
-        #TODO: Create __init__ method
+    def __init__(self, title, author_id, post_body):
+        self.title = title
+        self.author_id = author_id
+        self.post_body = post_body
+
+        db.session.add(self)
+        db.session.commit()
+
+    def upvote_post(self, user_id):
+        upvote = Reaction(1, user_id, self.id)
+
+        self.upvote_list.append(upvote)
+        db.session.commit()
+
+    def downvote_post(self, user_id):
+        downvote = Reaction(-1, user_id, self.id)
+
+        self.downvote_list.append(downvote)
+        db.session.commit()
 
     def update_col(self, key, value):
         setattr(self, key, value)
