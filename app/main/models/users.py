@@ -10,6 +10,8 @@ from sqlalchemy.sql import and_, select
 
 from app.main import db, login_manager
 from app.main.models.movies import Movie
+from app.main.models.posts import Post
+from app.main.models.comments import Comment
 
 
 class User(db.Model, UserMixin):
@@ -29,11 +31,13 @@ class User(db.Model, UserMixin):
     :bio: text
     :occupation: varchar(255)
     :profile_picture: int
-    :watch_list: Relationship
-    :bucket_list: Relationship
     :last_login: timestamp
     :creation_time: timestamp
     :is_verified: boolean
+
+    # Relationships
+    :watch_list: Relationship -> Movies (one to Many)
+    :bucket_list: Relationship -> Movies (one to Many)
     """
 
     # Columns
@@ -56,6 +60,8 @@ class User(db.Model, UserMixin):
     # Relationships
     watch_list = db.relationship('Movie', backref="user")
     bucket_list = db.relationship('Movie', backref="User")
+    posts = db.relationship('Post', backref="user")
+    comments = db.relationship('Comment', backref="user")
 
     def __init__(self, username, password, email):
         self.username = username

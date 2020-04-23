@@ -17,7 +17,7 @@ class Movie(SearchableMixin, db.Model):
     Columns
     -----------
     :id: int [pk]
-    :user_id: int [foreign key]
+    :user_id: int [Foreign Key -> User.id]
     :imdb_ID: varchar(128) [not NULL]
     :title: Text [not NULL]
     :year: int

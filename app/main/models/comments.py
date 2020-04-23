@@ -1,5 +1,5 @@
 """
-DB Model for Posts and
+DB Model for Comments and
 relevant junction tables
 """
 import datetime
@@ -7,35 +7,28 @@ import datetime
 from sqlalchemy.sql import and_, select
 
 from app.main import db, login_manager
-from app.main.models.comments import Comment
 
 
-class Post(db.Model):
+class Comment(db.Model):
     """
     Description of User model.
     Columns
     -----------
     :id: int [pk]
-    :title: Text [not NULL]
-    :author_id: int [Foreign Key]
+    :author_id: int [Foreign Key -> User.id]
+    :post_id: int [Foreign Key -> Post.id]
     :creation_time: DateTime [not NULL]
     :last_edit_time: DateTime [not NULL]
-    :post_body: Text
-
-    # Relationships
-    :comments: Relationship -> Comments (one to many)
+    :comment_body: Text
     """
 
     # Columns
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.Text, nullable=False)
     author_id = db.Column(db.Integer, db.ForeignKey("user.id"))
+    post_id = db.Column(db.Integer, db.ForeignKey("post.id"))
     creation_time = db.Column(db.DateTime, default=datetime.datetime.now())
     last_edit_time = db.Column(db.DateTime, default=datetime.datetime.now())
-    post_body = db.Column(db.Text)
-
-    # Relationships
-    comments = db.relationship('Comment', backref="post")
+    comment_body = db.Column(db.Text)
 
     def __init__(self):
         pass
