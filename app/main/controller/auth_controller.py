@@ -6,6 +6,10 @@ operations such as login, logout and signup.
 
 from flask import abort, request
 from flask_restplus import Resource
+from flask_jwt_extended import (create_access_token, create_refresh_token, jwt_required, jwt_refresh_token_required,
+                                get_jwt_identity, get_raw_jwt)
+
+from flask_login import login_required, current_user
 
 from app.main.service.auth_service import Authentication
 from app.main.util.dto import AuthDto, UserDto
@@ -28,9 +32,16 @@ class UserLogin(Resource):
         # get the post data
         post_data = request.json
         resp = Authentication.login_user(data=post_data)
+
         if resp[1] != 200:
-            return abort(403, resp[0])
+            return resp
         else:
+            access_token = create_access_token(identity=resp[0]['username'])
+            refresh_token = create_refresh_token(identity=resp[0]['username'])
+            
+            resp[0]['access_token'] = access_token
+            resp[0]['refresh_token'] = refresh_token
+
             return resp
 
 
@@ -39,9 +50,28 @@ class UserLogout(Resource):
     """
     Logout Resource
     """
+    @login_required
     @api.doc('Endpoint for User Logout')
-    def get(self):
+    def post(self):
         return Authentication.logout_user()
+
+@api.route('/isLoggedIn')
+class CheckLogIn(Resource):
+    def get(self):
+
+        if current_user.is_authenticated:
+            resp = {
+                'status' : 'success',
+                'message' : 'Logged In'
+            }
+            return resp, 200
+        else:
+            resp = {
+                'status' : 'fail',
+                'message' : ' Not Logged In'
+            }
+            return resp, 400
+    
 
 
 # Signup
@@ -54,18 +84,18 @@ class SignUp(Resource):
         post_data = request.json
         send_mail = request.args.get('send_mail')
         resp = Authentication.signup_user(data=post_data, send_mail=send_mail)
-        if resp[1] != 200:
-            return abort(403, resp[0])
-        else:
-            return resp
+        
+        return resp
 
 # Verify Email after signing up
-@api.route('/resend_email_verification')
+@api.route('/resendVerificationEmail')
 class SendVerificationEmail(Resource):
     """ Send user verification mail to the user."""
     @api.doc('Endpoint for sending a verification mail to the user')
+    @api.expect(email, validate=True)
     def post(self):
-        return Authentication.resend_verification()
+        data = request.json
+        return Authentication.resend_verification(data)
 
 
 @api.route('/confirm/<token>', methods=['GET'])

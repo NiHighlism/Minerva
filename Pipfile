@@ -47,6 +47,8 @@ pytest-flask = "*"
 pytest-cov = "*"
 sqlalchemy-elasticquery = "*"
 elasticsearch = "*"
+flask-jwt-extended = "*"
+pyjwt = "*"
 
 [requires]
 python_version = "3.6"

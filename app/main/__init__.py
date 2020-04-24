@@ -6,6 +6,7 @@ from flask_bcrypt import Bcrypt
 from flask_cors import CORS
 from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
+from flask_jwt_extended import JWTManager
 
 from app.main.config import config_by_name
 
@@ -40,5 +41,8 @@ def create_app(config_name):
 
     app.elasticsearch = Elasticsearch([app.config['ELASTICSEARCH_URL']])
     LOG.info("Elasticsearch set up successfully!")
+
+    jwt = JWTManager(app)
+    LOG.info("JWT Set Up!")
 
     return app

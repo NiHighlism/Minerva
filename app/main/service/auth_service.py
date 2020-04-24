@@ -59,6 +59,7 @@ class Authentication:
                         'status': 'success',
                         'message': 'Successfully logged in.',
                     }
+                    
                     login_info = {
                         'id': current_user.id,
                         'username': current_user.username,
@@ -69,7 +70,7 @@ class Authentication:
                         'status': 'fail',
                         'message': 'Please verify your email before first login',
                     }
-                    return response_object, 401
+                    return response_object, 402
             else:
                 response_object = {
                     'status': 'fail',
@@ -93,7 +94,7 @@ class Authentication:
                     'status': 'Invalid',
                     'message': 'Not logged in',
                 }
-                return response_object, 300
+                return response_object, 400
             logout()
             response_object = {
                 'status': 'success',
@@ -119,7 +120,7 @@ class Authentication:
                 }
                 LOG.info(
                     'Email already present in database. Redirect to Login Page')
-                return response_object, 300
+                return response_object, 401
             user = User.query.filter_by(username=data.get('username')).first()
             if user is not None:
                 response_object = {
@@ -128,7 +129,7 @@ class Authentication:
                 }
                 LOG.info(
                     'Username %s already present in database. Ask to choose different username', data.get('username'))
-                return response_object, 300
+                return response_object, 402
 
             user = User(data.get('username'),
                         data.get('password'), data.get('email'))
@@ -145,6 +146,10 @@ class Authentication:
                 'status': 'success',
                 'message': 'User added Successfully',
             }
+
+            user.update_col('first_name', data.get('first_name'))
+            user.update_col('last_name', data.get('last_name'))
+
             return response_object, 200
 
         except BaseException:
@@ -157,11 +162,10 @@ class Authentication:
             return response_object, 500
 
     @staticmethod
-    def resend_verification():
+    def resend_verification(data):
         try:
-            if current_user.is_authenticated:
-                email = current_user.email
-                return Authentication.send_verification(email)
+            email = data.get('email')
+            return Authentication.send_verification(email)
         except BaseException:
             LOG.error('Verification mail couldn\'t be sent', exc_info=True)
             response_object = {
@@ -174,12 +178,19 @@ class Authentication:
     def send_verification(email):
         try:
             user = User.query.filter_by(email=email).first()
+            if user is None:
+                response_object = {
+                    'status' : 'error',
+                    'message' : 'User not present'
+                }
+                return response_object, 401
+            
             if user.isVerified():
                 response_object = {
                     'status': 'Error',
                     'message': 'Already verified'
                 }
-                return response_object, 400
+                return response_object, 403
 
             token = generate_confirmation_token(user.email)
             subject = "Minerva: Please confirm Email Address"
@@ -244,6 +255,12 @@ Minerva""")
             if user is None:
                 LOG.info('User with email {} isn\'t registered.'.format(
                     data.get('email')))
+                
+                response_object = {
+                    'status' : 'fail',
+                    'message' : 'User is not registered'
+                }
+                return response_object, 401
             else:
                 reset_token = generate_reset_token(data.get('email'))
                 subject = "IIT Tech Ambit: Reset Password"

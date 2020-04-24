@@ -7,6 +7,8 @@ import datetime
 from flask_bcrypt import check_password_hash, generate_password_hash
 from flask_login import UserMixin
 from sqlalchemy.sql import and_, select
+from flask_jwt_extended import (create_access_token, create_refresh_token, jwt_required, jwt_refresh_token_required,
+                                get_jwt_identity, get_raw_jwt, decode_token)
 
 from app.main import db, login_manager
 # from app.main.models.comments import Comment
@@ -49,17 +51,17 @@ class User(db.Model, UserMixin):
     dob = db.Column(db.DateTime)
     email = db.Column(db.String(255), nullable=False)
     fb_handle = db.Column(db.String(255))
-    g_handle = db.Column(db.String(255))
     twitter_handle = db.Column(db.String(255))
+    instagram_handle = db.Column(db.String(255))
     profile_picture = db.Column(db.Integer)
     bio = db.Column(db.Text)
+    favourites = db.Column(db.JSON)
     last_login = db.Column(db.DateTime)
     creation_time = db.Column(db.DateTime)
     is_verified = db.Column(db.Boolean, default=False)
 
     # Relationships
-    watch_list = db.relationship('Movie', backref="user")
-    bucket_list = db.relationship('Movie', backref="User")
+    movie_list = db.relationship('Movie', backref="user")
     posts = db.relationship('Post', backref="user")
     # comments = db.relationship('Comment', backref="user")
 
@@ -73,10 +75,27 @@ class User(db.Model, UserMixin):
         db.session.add(self)
         db.session.commit()
 
+    # @staticmethod
+    # @login_manager.user_loader
+    # def load_user(id):
+    #     return User.query.filter_by(id=id).first()
+    
     @staticmethod
-    @login_manager.user_loader
-    def load_user(id):
-        return User.query.filter_by(id=id).first()
+    @login_manager.request_loader
+    def load_user_from_request(request):
+        try:
+            token = request.headers.get('Authorization')
+            if token:
+                user_id = decode_token(token)
+                print(user_id)
+                username = user_id['identity']
+                user = User.query.filter_by(username=username).first()
+                if user:
+                    return user
+        
+        except Exception as e:
+            print(e)
+            return None
 
     def update_col(self, key, value):
         setattr(self, key, value)
@@ -97,12 +116,7 @@ class User(db.Model, UserMixin):
         self.is_verified = True
         db.session.commit()
 
-    def add_to_watch_list(self, imdb_ID):
+    def add_to_movie_list(self, imdb_ID):
         movie = Movie.query.filter_by(imdb_ID=imdb_ID).first()
-        self.watch_list.append(movie)
-        db.session.commit()
-
-    def add_to_bucket_list(self, imdb_ID):
-        movie = Movie.query.filter_by(imdb_ID=imdb_ID).first()
-        self.bucket_list.append(movie)
+        self.movie_list.append(movie)
         db.session.commit()

@@ -14,7 +14,9 @@ class AuthDto:
 
     login_info = api.model('login_info', {
         'id': fields.Integer(required=True, description="ID of the user."),
-        'username': fields.String(required=True, description="username of the user.")
+        'username': fields.String(required=True, description="username of the user."),
+        'access_token' : fields.String(),
+        'refresh_token' : fields.String()
     })
 
     reset_email = api.model('email_details', {
@@ -29,35 +31,46 @@ class AuthDto:
 
 class UserDto:
     api = Namespace('user', description='user related operations')
+    favourites = api.model('favourites', {
+        'movie': fields.String(description="Favourite Movie", default=""),
+        'actor' : fields.String(description="Favourite Actor", default = ""),
+        'genre' : fields.String(description="Favourite genre", default = "")
+    })
+
     user = api.model('user', {
+        'first_name' : fields.String(required=False),
+        'last_name' : fields.String(required=False),
         'username': fields.String(required=True, description='user username'),
         'password': fields.String(required=True, description='user password'),
         'email': fields.String(required=True, description='user email address'),
     })
 
     userInfo = api.model('userInfo', {
-        'user_ID': fields.String(required=True, description="User ID"),
+        'id' : fields.Integer(required=True),
         'username': fields.String(required=True, description='user username'),
         'first_name': fields.String(description='first name', default=""),
         'last_name': fields.String(description="last name", default=""),
         'dob': fields.DateTime(dt_format='rfc822', description="date of birth"),
         'email': fields.String(required=True, description='user email address'),
         'fb_handle': fields.String(description="facebook handle"),
-        'g_handle': fields.String(description="github handle"),
-        'medium_handle': fields.String(description="medium handle"),
+        'instagram_handle': fields.String(description="medium handle"),
         'twitter_handle': fields.String(description="twitter handle"),
-        'linkedin_handle': fields.String(description="linkedin handle"),
+        'favourites' : fields.Nested(favourites),
         'bio': fields.String(description="biography"),
         'occupation': fields.String(description="occupation"),
         'last_login': fields.DateTime(dt_format='rfc822', description="last login time")
     })
 
-    payment = api.model('payment', {
-        'username': fields.String(required=True,
-                                  description='username of the payee'),
-        'amount': fields.Float(required=True, descripton="Amount paid"),
-        'api_response': fields.String(required=True,
-                                      description="Response returned by vendor")
+    updateInfo = api.model('userInfo', {
+        'username': fields.String(required=True, description='user username'),
+        'first_name': fields.String(description='first name', default=""),
+        'last_name': fields.String(description="last name", default=""),
+        'fb_handle': fields.String(description="facebook handle"),
+        'instagram_handle': fields.String(description="medium handle"),
+        'twitter_handle': fields.String(description="twitter handle"),
+        'favourites' : fields.Nested(favourites),
+        'bio': fields.String(description="biography"),
+        'occupation': fields.String(description="occupation")
     })
 
 

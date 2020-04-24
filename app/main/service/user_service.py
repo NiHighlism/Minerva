@@ -15,21 +15,21 @@ LOG = getLogger(__name__)
 class UserService:
 
     @staticmethod
-    def get_by_id(id):
+    def get_by_username(username):
         try:
-            user = User.query.filter_by(id=id).first()
+            user = User.query.filter_by(username=username).first()
             if user is None:
-                LOG.info('User with id: {} does not exit'.format(id))
+                LOG.info('User with username: {} does not exit'.format(username))
                 response_object = {
                     'status': 'Invalid',
                     'message': 'User does not exist'
                 }
-                return response_object, 300
+                return response_object, 400
             return user, 200
 
         except Exception as e:
-            LOG.error('Failed to fetch details for id :{}'.format(
-                'id'), exc_info=True)
+            LOG.error('Failed to fetch details for username :{}'.format(
+                username), exc_info=True)
             response_object = {
                 'status': 'fail',
                 'message': 'Try again',
@@ -100,29 +100,22 @@ class UserService:
             }
             return response_object, 500
 
+
     @staticmethod
-    def add_to_watch_list(imdb_ID):
+    def add_to_movie_list(imdb_ID):
         try:
             user = User.query.filter_by(id=current_user.id).first()
             movie = Movie.query.filter_by(imdb_ID=imdb_ID).first()
 
-            watch_list = user.watch_list
+            movie_list = user.movie_list
 
-            if movie in watch_list:
-                response_object = {
-                    'status': 'success',
-                    'message': 'Movie exists already in watch list'
-                }
-                return response_object, 200
+            if movie not in movie_list:
+                user.add_to_movie_list(imdb_ID)
+            
+            user = User.query.filter_by(id=current_user.id).first()
 
-            user.add_to_watch_list(imdb_ID)
-            response_object = {
-                'status': 'success',
-                'message': 'Movie added successfully'
-            }
-
-            return response_object, 200
-
+            movie_list = user.movie_list
+            return movie_list, 200
         except Exception:
             LOG.error("Movie couldn't be added to List.", exc_info=True)
             response_object = {
@@ -132,28 +125,10 @@ class UserService:
 
             return response_object, 500
 
+
     @staticmethod
-    def add_to_bucket_list(imdb_ID):
-        try:
-            user = User.query.filter_by(id=current_user.id).first()
-            movie = Movie.query.filter_by(imdb_ID=imdb_ID).first()
-
-            bucket_list = user.bucket_list
-
-            if movie in bucket_list:
-                response_object = {
-                    'status': 'success',
-                    'message': 'Movie exists already in bucket list'
-                }
-                return response_object, 200
-
-            user.add_to_bucket_list(imdb_ID)
-
-        except Exception:
-            LOG.error("Movie couldn't be added to List.", exc_info=True)
-            response_object = {
-                'status': 'fail',
-                'message': 'Try again later. '
-            }
-
-            return response_object, 500
+    def get_movie_list(id):
+        user = User.query.filter_by(id=id).first()
+        
+        movie_list = [movie for movie in user.movie_list]
+        return movie_list, 200
