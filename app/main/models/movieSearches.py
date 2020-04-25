@@ -71,7 +71,7 @@ def add_to_index(index, model):
     for field in model.__searchable__:
         payload[field] = getattr(model, field)
 
-    current_app.elasticsearch.index(index=index, body=payload)
+    current_app.elasticsearch.index(index=index, id=model.id, body=payload)
 
 
 def remove_from_index(index, model):
@@ -84,6 +84,10 @@ def query_index(index, query, page, per_page):
     page = int(page)
     per_page = int(per_page)
 
+    print("DEETS")
+    print(page)
+    print(per_page)
+    
     if not current_app.elasticsearch:
         return [], 0
     try:
@@ -93,16 +97,18 @@ def query_index(index, query, page, per_page):
                 'query': {
                     'multi_match': {
                         'query': query,
-                        'fields': ["title^2", "year^1", "*"]
+                        'fields': "*"
                     }
                 },
                 "from": (page - 1) * per_page,
                 "size": per_page
             })
+        print(search['hits']['hits'])
         ids = [int(hit['_id']) for hit in search['hits']['hits']]
         return ids, search['hits']['total']['value']
 
     except Exception as e:
+        print(e)
         LOG.error("FUCKED UP", exc_info=True)
 
 

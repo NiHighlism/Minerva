@@ -31,11 +31,8 @@ class AuthDto:
 
 class UserDto:
     api = Namespace('user', description='user related operations')
-    favourites = api.model('favourites', {
-        'movie': fields.String(description="Favourite Movie", default=""),
-        'actor': fields.String(description="Favourite Actor", default=""),
-        'genre': fields.String(description="Favourite genre", default="")
-    })
+
+    movie_list = api.model('movie_list', {'movie_list': fields.List(fields.String), 'imdb_ID' : fields.List(fields.Integer)})
 
     user = api.model('user', {
         'first_name': fields.String(required=False),
@@ -50,15 +47,16 @@ class UserDto:
         'username': fields.String(required=True, description='user username'),
         'first_name': fields.String(description='first name', default=""),
         'last_name': fields.String(description="last name", default=""),
-        'dob': fields.DateTime(dt_format='rfc822', description="date of birth"),
         'email': fields.String(required=True, description='user email address'),
         'fb_handle': fields.String(description="facebook handle"),
         'instagram_handle': fields.String(description="medium handle"),
         'twitter_handle': fields.String(description="twitter handle"),
-        'favourites': fields.Nested(favourites),
         'bio': fields.String(description="biography"),
-        'occupation': fields.String(description="occupation"),
-        'last_login': fields.DateTime(dt_format='rfc822', description="last login time")
+        'seen_list' : fields.Nested(movie_list),
+        'bucket_list' : fields.Nested(movie_list),
+        'recommend_list' : fields.Nested(movie_list),
+        'last_login': fields.DateTime(dt_format='rfc822', description="last login time"),
+        'create_date' : fields.String()
     })
 
     updateInfo = api.model('userInfo', {
@@ -68,7 +66,6 @@ class UserDto:
         'fb_handle': fields.String(description="facebook handle"),
         'instagram_handle': fields.String(description="medium handle"),
         'twitter_handle': fields.String(description="twitter handle"),
-        'favourites': fields.Nested(favourites),
         'bio': fields.String(description="biography"),
         'occupation': fields.String(description="occupation")
     })
@@ -76,6 +73,11 @@ class UserDto:
 
 class MovieDto:
     api = Namespace('movie', description='movie related operations')
+
+    movieList = api.model('movieList', {
+        'imdb_ID_list' : fields.String(),
+        'movie_list' : fields.String(required=True)
+    })
 
     genre = api.model('genre', {'genreList': fields.List(fields.String)})
     director = api.model(

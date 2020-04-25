@@ -57,8 +57,15 @@ class User(db.Model, UserMixin):
     bio = db.Column(db.Text)
     favourites = db.Column(db.JSON)
     last_login = db.Column(db.DateTime)
-    creation_time = db.Column(db.DateTime)
+    creation_time = db.Column(db.DateTime, default=datetime.datetime.now())
     is_verified = db.Column(db.Boolean, default=False)
+
+    seen_list_titles = db.Column(db.JSON, default={})
+    seen_list_IDs = db.Column(db.JSON, default={})
+    bucket_list_titles = db.Column(db.JSON, default={})
+    bucket_list_IDs = db.Column(db.JSON, default={})
+    recommend_list_titles = db.Column(db.JSON, default={})
+    recommend_list_IDs = db.Column(db.JSON, default={})
     
     # Relationships
     movie_list = db.relationship('Movie', backref="user")

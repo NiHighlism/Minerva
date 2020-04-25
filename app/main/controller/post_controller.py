@@ -23,7 +23,6 @@ commentInfo = CommentDto.commentInfo
 
 movieInfo = MovieDto.movie
 
-
 @api.route("/<id>")
 class PostFetch(Resource):
     @api.marshal_with(postInfo)
