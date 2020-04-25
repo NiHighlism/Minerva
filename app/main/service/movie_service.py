@@ -134,7 +134,8 @@ class MovieService:
     @staticmethod
     def get_all_posts(id):
         try:
-            res = Post.query.filter_by(imdb_ID=id).all()
+            res = Post.query.filter_by(post_movie=id).all()
+            print(res)
 
             posts = [post for post in res]
             return posts, 200

@@ -70,6 +70,7 @@ class CreateNewPost(Resource):
         Login is required.
         """
         new_post_data = request.json
+        print(new_post_data)
         resp = PostService.create_new_post(new_post_data)
 
         if resp[1] != 200:

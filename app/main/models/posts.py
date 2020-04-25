@@ -35,7 +35,7 @@ class Post(Base, SearchableMixin):
                         primary_key=True, unique=True)
     title = db.Column(db.Text, nullable=False)
 
-    imdb_ID = db.Column(db.String(20))
+    post_movie = db.Column(db.String(20))
 
     __searchable__ = ['title', 'body']
 
@@ -50,7 +50,7 @@ class Post(Base, SearchableMixin):
     def __init__(self, author_id, post_movie, title, post_body):
         super().__init__(author_id, post_body, "post")
         self.title = title
-        self.imdb_ID = post_movie
+        self.post_movie = post_movie
         db.session.add(self)
         db.session.commit()
 

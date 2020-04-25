@@ -71,37 +71,6 @@ class UserService:
             return response_object, 500
 
     @staticmethod
-    def save_user_payment(data):
-        try:
-            user = User.query.filter_by(id=current_user.id).first()
-            if user is None:
-                LOG.info(
-                    'User with id: {} does not exit'.format(
-                        current_user.id))
-                response_object = {
-                    'status': 'Invalid',
-                    'message': 'User does not exist'
-                }
-                return response_object, 300
-
-            current_user.addPayment(data)
-            response_object = {
-                'status': 'Success',
-                'message': 'Saved the payment into the users information.'
-            }
-            return response_object, 200
-
-        except BaseException:
-            LOG.error('Failed to save payment details for id :{}'.format(
-                current_user.id), exc_info=True)
-            response_object = {
-                'status': 'fail',
-                'message': 'Try again',
-            }
-            return response_object, 500
-
-
-    @staticmethod
     def add_to_movie_list(imdb_ID):
         try:
             user = User.query.filter_by(id=current_user.id).first()
@@ -111,7 +80,7 @@ class UserService:
 
             if movie not in movie_list:
                 user.add_to_movie_list(imdb_ID)
-            
+
             user = User.query.filter_by(id=current_user.id).first()
 
             movie_list = user.movie_list
@@ -125,10 +94,9 @@ class UserService:
 
             return response_object, 500
 
-
     @staticmethod
-    def get_movie_list(id):
-        user = User.query.filter_by(id=id).first()
-        
+    def get_movie_list(username):
+        user = User.query.filter_by(username=username).first()
+
         movie_list = [movie for movie in user.movie_list]
         return movie_list, 200

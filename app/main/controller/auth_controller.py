@@ -5,11 +5,10 @@ operations such as login, logout and signup.
 '''
 
 from flask import abort, request
+from flask_jwt_extended import (create_access_token, create_refresh_token, decode_token, get_jwt_identity, get_raw_jwt,
+                                jwt_refresh_token_required, jwt_required)
+from flask_login import current_user, login_required
 from flask_restplus import Resource
-from flask_jwt_extended import (create_access_token, create_refresh_token, jwt_required, jwt_refresh_token_required,
-                                get_jwt_identity, get_raw_jwt)
-
-from flask_login import login_required, current_user
 
 from app.main.service.auth_service import Authentication
 from app.main.util.dto import AuthDto, UserDto
@@ -38,11 +37,33 @@ class UserLogin(Resource):
         else:
             access_token = create_access_token(identity=resp[0]['username'])
             refresh_token = create_refresh_token(identity=resp[0]['username'])
-            
+
             resp[0]['access_token'] = access_token
             resp[0]['refresh_token'] = refresh_token
 
             return resp
+
+
+@api.route('/refreshToken')
+class RefereshJWTToken(Resource):
+    @login_required
+    def post(self):
+        try:
+            token = request.headers['Authorization']
+            user_id = decode_token(token)
+            username = user_id['identity']
+            response_object = {
+                'username': username,
+                'access_token': create_access_token(identity=username)
+            }
+            return response_object, 200
+
+        except BaseException:
+            response_object = {
+                'status': 'fail',
+                'message': 'Could not refresh token. '
+            }
+            return response_object, 500
 
 
 @api.route('/logout')
@@ -55,23 +76,23 @@ class UserLogout(Resource):
     def post(self):
         return Authentication.logout_user()
 
+
 @api.route('/isLoggedIn')
 class CheckLogIn(Resource):
     def get(self):
 
         if current_user.is_authenticated:
             resp = {
-                'status' : 'success',
-                'message' : 'Logged In'
+                'status': 'success',
+                'message': 'Logged In'
             }
             return resp, 200
         else:
             resp = {
-                'status' : 'fail',
-                'message' : ' Not Logged In'
+                'status': 'fail',
+                'message': ' Not Logged In'
             }
             return resp, 400
-    
 
 
 # Signup
@@ -84,7 +105,7 @@ class SignUp(Resource):
         post_data = request.json
         send_mail = request.args.get('send_mail')
         resp = Authentication.signup_user(data=post_data, send_mail=send_mail)
-        
+
         return resp
 
 # Verify Email after signing up

@@ -5,10 +5,10 @@ and relevant junction tables
 import datetime
 
 from flask_bcrypt import check_password_hash, generate_password_hash
+from flask_jwt_extended import (create_access_token, create_refresh_token, decode_token, get_jwt_identity, get_raw_jwt,
+                                jwt_refresh_token_required, jwt_required)
 from flask_login import UserMixin
 from sqlalchemy.sql import and_, select
-from flask_jwt_extended import (create_access_token, create_refresh_token, jwt_required, jwt_refresh_token_required,
-                                get_jwt_identity, get_raw_jwt, decode_token)
 
 from app.main import db, login_manager
 # from app.main.models.comments import Comment
@@ -79,7 +79,7 @@ class User(db.Model, UserMixin):
     # @login_manager.user_loader
     # def load_user(id):
     #     return User.query.filter_by(id=id).first()
-    
+
     @staticmethod
     @login_manager.request_loader
     def load_user_from_request(request):
@@ -87,12 +87,11 @@ class User(db.Model, UserMixin):
             token = request.headers.get('Authorization')
             if token:
                 user_id = decode_token(token)
-                print(user_id)
                 username = user_id['identity']
                 user = User.query.filter_by(username=username).first()
                 if user:
                     return user
-        
+
         except Exception as e:
             print(e)
             return None

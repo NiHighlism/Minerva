@@ -4,7 +4,7 @@ from flask_login import current_user, login_required
 from flask_restplus import Resource
 
 from app.main.service.user_service import UserService
-from app.main.util.dto import AuthDto, UserDto, MovieDto
+from app.main.util.dto import AuthDto, MovieDto, UserDto
 
 api = UserDto.api
 user_auth = AuthDto.user_auth
@@ -37,7 +37,6 @@ class UpdateUserInfo(Resource):
     # TODO: Superuser can't change username parameter.
 
 
-
 @api.route("/add/list")
 class AddMovieList(Resource):
     @login_required
@@ -52,11 +51,12 @@ class AddMovieList(Resource):
         else:
             return resp
 
-@api.route("/<id>/getMovieList")
+
+@api.route("/<username>/getMovieList")
 class getMovieList(Resource):
     @api.marshal_list_with(movie)
-    def get(self, id):
-        resp = UserService.get_movie_list(id)
+    def get(self, username):
+        resp = UserService.get_movie_list(username)
         if resp[1] != 200:
             return abort(403, resp[0])
         else:

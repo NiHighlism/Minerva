@@ -59,7 +59,7 @@ class Authentication:
                         'status': 'success',
                         'message': 'Successfully logged in.',
                     }
-                    
+
                     login_info = {
                         'id': current_user.id,
                         'username': current_user.username,
@@ -180,11 +180,11 @@ class Authentication:
             user = User.query.filter_by(email=email).first()
             if user is None:
                 response_object = {
-                    'status' : 'error',
-                    'message' : 'User not present'
+                    'status': 'error',
+                    'message': 'User not present'
                 }
                 return response_object, 401
-            
+
             if user.isVerified():
                 response_object = {
                     'status': 'Error',
@@ -255,10 +255,10 @@ Minerva""")
             if user is None:
                 LOG.info('User with email {} isn\'t registered.'.format(
                     data.get('email')))
-                
+
                 response_object = {
-                    'status' : 'fail',
-                    'message' : 'User is not registered'
+                    'status': 'fail',
+                    'message': 'User is not registered'
                 }
                 return response_object, 401
             else:
