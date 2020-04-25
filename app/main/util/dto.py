@@ -32,7 +32,8 @@ class AuthDto:
 class UserDto:
     api = Namespace('user', description='user related operations')
 
-    movie_list = api.model('movie_list', {'movie_list': fields.List(fields.String), 'imdb_ID' : fields.List(fields.Integer)})
+    movie_list = api.model('movie_list', {'movie_list': fields.List(
+        fields.String), 'imdb_ID': fields.List(fields.Integer)})
 
     user = api.model('user', {
         'first_name': fields.String(required=False),
@@ -52,11 +53,11 @@ class UserDto:
         'instagram_handle': fields.String(description="medium handle"),
         'twitter_handle': fields.String(description="twitter handle"),
         'bio': fields.String(description="biography"),
-        'seen_list' : fields.Nested(movie_list),
-        'bucket_list' : fields.Nested(movie_list),
-        'recommend_list' : fields.Nested(movie_list),
+        'seen_list': fields.Nested(movie_list),
+        'bucket_list': fields.Nested(movie_list),
+        'recommend_list': fields.Nested(movie_list),
         'last_login': fields.DateTime(dt_format='rfc822', description="last login time"),
-        'create_date' : fields.String()
+        'create_date': fields.String()
     })
 
     updateInfo = api.model('userInfo', {
@@ -75,8 +76,8 @@ class MovieDto:
     api = Namespace('movie', description='movie related operations')
 
     movieList = api.model('movie_list', {
-        'imdb_ID' : fields.String,
-        'movie' : fields.String
+        'imdb_ID': fields.String,
+        'movie': fields.String
     })
 
     # movieList = api.model('movieList', {
@@ -118,13 +119,13 @@ class MovieDto:
 
 class PostDto:
     api = Namespace('post', description='post related operations')
-    
+
     tags = api.model('tags', {'tagList': fields.List(fields.String)})
     post = api.model('post', {
         'title': fields.String(description="Post title", required=True),
         'body': fields.String(description="Content of the post"),
         'post_movie': fields.String(description="Movie the post is related to"),
-        'tags' : fields.Nested(tags)
+        'tags': fields.Nested(tags)
     })
 
     postInfo = api.model('postInfo', {
@@ -134,10 +135,11 @@ class PostDto:
         'upvotes': fields.Integer(description="Upvotes to a Post"),
         'post_movie': fields.String(description="Movie the post is related to"),
         'downvotes': fields.Integer(description="Downvotes to a Post"),
-        'tags' : fields.Nested(tags),
+        'tags': fields.Nested(tags),
         'author_id': fields.Integer(description="ID of author of post"),
-        'author_name' : fields.String(),
-        'author_username' : fields.String(),
+        'numComments': fields.Integer(descriptions="Number of comments on post", default=0),
+        'author_name': fields.String(),
+        'author_username': fields.String(),
         'last_edit_time': fields.DateTime(description="Last edit timestamp of post")
     })
 

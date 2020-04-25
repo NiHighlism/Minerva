@@ -12,8 +12,8 @@ from app.main import db
 from app.main.models.comments import Comment
 from app.main.models.movies import Movie
 from app.main.models.posts import Post
-from app.main.models.users import User
 from app.main.models.reactions import Reaction
+from app.main.models.users import User
 
 LOG = getLogger(__name__)
 
@@ -26,8 +26,15 @@ class PostService:
             author_id = post.author_id
             author = User.query.filter_by(id=author_id).first()
 
-            post.author_name = author.first_name + " " + author.last_name
+            try:
+                post.author_name = (author.first_name + " " + author.last_name)
+            except BaseException:
+                post.author_name = "Anonymous Bat"
+
             post.author_username = author.username
+
+            post.numComments = len(post.comments.all())
+            print(post.numComments)
 
             return post, 200
 
@@ -59,7 +66,8 @@ class PostService:
 
                     post.author_name = author.first_name + " " + author.last_name
                     post.author_username = author.username
-                
+                    post.numComments = len(post.comments.all())
+
                 return post_results, 200
 
             else:
@@ -73,6 +81,7 @@ class PostService:
 
                     post.author_name = author.first_name + " " + author.last_name
                     post.author_username = author.username
+                    post.numComments = len(post.comments.all())
 
                 totalResults = len(post_results)
 
@@ -114,11 +123,13 @@ class PostService:
                     'Post already present in database. Redirect to Main Page')
                 return response_object, 401
 
-            post = Post(current_user_id, post_movie, post_title, post_body, tags)
+            post = Post(current_user_id, post_movie,
+                        post_title, post_body, tags)
             response_object = {
                 'status': 'success',
                 'message': 'Post added successfully'
             }
+            post.numComments = len(post.comments.all())
             return post, 200
 
         except BaseException:
@@ -161,6 +172,7 @@ class PostService:
 
             post.author_name = author.first_name + " " + author.last_name
             post.author_username = author.username
+            post.numComments = len(post.comments.all())
 
             return post, 200
 

@@ -66,7 +66,7 @@ class User(db.Model, UserMixin):
     bucket_list_IDs = db.Column(db.JSON, default={})
     recommend_list_titles = db.Column(db.JSON, default={})
     recommend_list_IDs = db.Column(db.JSON, default={})
-    
+
     # Relationships
     movie_list = db.relationship('Movie', backref="user")
     posts = db.relationship('Post', backref="user")
