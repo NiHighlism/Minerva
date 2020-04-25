@@ -182,7 +182,7 @@ class Authentication:
                 return response_object, 400
 
             token = generate_confirmation_token(user.email)
-            subject = "IIT Tech Ambit: Confirm Your Email Address"
+            subject = "Minerva: Please confirm Email Address"
             confirm_url = url_for('api.auth_confirm_token',
                                   token=token, _external=True)
             print("Confirmation URL for {}: {}".format(
@@ -192,8 +192,8 @@ class Authentication:
                             f"""Hey {user.username}<br/><br/>
 Please use the below link to confirm your email address.<br/></br>
 {confirm_url}<br/><br/><br/>
-DevOps Team<br/>
-IIT Tech Ambit""")
+Mukul Mehta<br/>
+Minerva""")
 
             response_object = {
                 'status': 'Success',
