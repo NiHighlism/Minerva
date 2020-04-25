@@ -7,7 +7,7 @@ from werkzeug.datastructures import FileStorage
 class AuthDto:
     api = Namespace('auth', description='Authentication Related operations')
     user_auth = api.model('auth_details', {
-        'email': fields.String(required=True, description='Login Email'),
+        'username': fields.String(required=True, description='Login Username'),
         'password': fields.String(required=True, description='Login Password'),
         'remember': fields.String(description='Stay Logged In'),
     })

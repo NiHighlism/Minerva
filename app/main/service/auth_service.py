@@ -45,7 +45,13 @@ class Authentication:
                     'message': 'Already Logged In',
                 }
                 return response_object, 300
-            user = User.query.filter_by(email=data.get('email')).first()
+            user = User.query.filter_by(username=data.get('username')).first()
+            if user is None:
+                response_object = {
+                    'status' : 'fail',
+                    'message' : 'User does not exist. '
+                }
+                return response_object, 403
             if user and user.check_password(data.get('password')):
                 if user.is_verified:
                     # convert string to bool
@@ -263,7 +269,7 @@ Minerva""")
                 return response_object, 401
             else:
                 reset_token = generate_reset_token(data.get('email'))
-                subject = "IIT Tech Ambit: Reset Password"
+                subject = "Minerva: Reset Password"
                 reset_url = url_for('api.auth_reset_token_verify',
                                     token=reset_token, _external=True)
                 async_send_mail(app._get_current_object(),
@@ -271,8 +277,7 @@ Minerva""")
                                 f"""Hey {user.username}<br/><br/>
 Please use the below link to reset your password.<br/></br>
 {reset_url}<br/><br/><br/>
-DevOps Team<br/>
-IIT Tech Ambit""")
+Minerva""")
 
             response_object = {
                 'status': 'Success',
