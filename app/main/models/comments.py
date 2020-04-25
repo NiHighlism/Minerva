@@ -4,8 +4,8 @@ relevant junction tables
 """
 import datetime
 
-from sqlalchemy.sql import and_, select
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.sql import and_, select
 
 from app.main import db
 from app.main.models.base import Base
@@ -28,16 +28,16 @@ class Comment(SearchableMixin, Base):
     :comment_body: Text
     """
 
-
     # Columns
     id = db.Column(db.Integer, db.ForeignKey("base.id"), primary_key=True)
-    comment_id = db.Column(db.Integer, autoincrement=True, primary_key=True, unique=True)
+    comment_id = db.Column(db.Integer, autoincrement=True,
+                           primary_key=True, unique=True)
     parent_post_id = db.Column(db.Integer, db.ForeignKey("post.post_id"))
 
     __searchable__ = ['body']
 
     __mapper_args__ = {
-        'polymorphic_identity':'comment',
+        'polymorphic_identity': 'comment',
         'inherit_condition': (id == Base.id)
     }
 

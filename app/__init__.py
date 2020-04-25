@@ -4,10 +4,10 @@ from flask_restplus import Api
 
 # from app.main.controller.article_controller import api as post_ns
 from app.main.controller.auth_controller import api as auth_ns
-from app.main.controller.movie_controller import api as movie_ns
-from app.main.controller.user_controller import api as user_ns
-from app.main.controller.post_controller import api as post_ns
 from app.main.controller.comment_controller import api as comment_ns
+from app.main.controller.movie_controller import api as movie_ns
+from app.main.controller.post_controller import api as post_ns
+from app.main.controller.user_controller import api as user_ns
 
 blueprint = Blueprint('api', __name__)
 

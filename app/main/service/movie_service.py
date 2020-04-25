@@ -9,6 +9,7 @@ from sqlalchemy.orm.exc import NoResultFound
 
 from app.main import db
 from app.main.models.movies import Movie
+from app.main.models.posts import Post
 
 LOG = getLogger(__name__)
 
@@ -119,6 +120,24 @@ class MovieService:
             total_pages = int(totalResults) / int(results_per_page) or 1
 
             return total_pages, 200
+
+        except BaseException:
+            LOG.error(
+                "Search query was not able to complete. Please try again later", exc_info=True)
+            response_object = {
+                'status': 'Error',
+                'message': 'Failed fetching details. Try later.'
+            }
+
+            return response_object, 500
+
+    @staticmethod
+    def get_all_posts(id):
+        try:
+            res = Post.query.filter_by(imdb_ID=id).all()
+
+            posts = [post for post in res]
+            return posts, 200
 
         except BaseException:
             LOG.error(

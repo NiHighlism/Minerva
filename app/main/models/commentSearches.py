@@ -1,8 +1,8 @@
-from app.main import db
-
 from logging import getLogger
 
 from flask import current_app
+
+from app.main import db
 
 LOG = getLogger(__name__)
 
@@ -18,11 +18,11 @@ def create_index(index, model):
             },
             "mappings": {
                 "properties": {
-                    "body" : {
-                        "type" : "text"
+                    "body": {
+                        "type": "text"
                     },
-                    "author_username" : {
-                        "type" : "text"
+                    "author_username": {
+                        "type": "text"
                     }
                 }
             }
@@ -43,10 +43,11 @@ def add_to_index(index, model):
     payload = {}
     for field in model.__searchable__:
         payload[field] = getattr(model, field)
-    author = db.session.execute("SELECT username FROM  user WHERE user.id = {}".format(model.author_id))
+    author = db.session.execute(
+        "SELECT username FROM  user WHERE user.id = {}".format(model.author_id))
     username = author.cursor.fetchone()[0]
     payload["author_username"] = username
-    
+
     current_app.elasticsearch.index(index=index, id=model.id, body=payload)
 
 
@@ -64,7 +65,7 @@ def query_index(index, query, page, per_page):
 
     if not current_app.elasticsearch:
         return [], 0
-    
+
     try:
         search = current_app.elasticsearch.search(
             index=index,
@@ -82,7 +83,6 @@ def query_index(index, query, page, per_page):
 
     except Exception as e:
         LOG.error("FUCKED UP", exc_info=True)
-
 
 
 class SearchableMixin(object):

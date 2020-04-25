@@ -8,7 +8,7 @@ from sqlalchemy import desc
 from app.main.models.posts import Post
 from app.main.models.users import User
 from app.main.service.post_service import PostService
-from app.main.util.dto import CommentDto, PostDto
+from app.main.util.dto import CommentDto, MovieDto, PostDto
 
 LOG = getLogger(__name__)
 
@@ -21,6 +21,9 @@ comment_api = CommentDto.api
 comment = CommentDto.comment
 commentInfo = CommentDto.commentInfo
 
+movieInfo = MovieDto.movie
+
+
 @api.route("/<id>")
 class PostFetch(Resource):
     @api.marshal_with(postInfo)
@@ -32,19 +35,18 @@ class PostFetch(Resource):
         resp = PostService.get_post_by_id(post_id)
         if resp[1] != 200:
             abort(403, resp)
-        
+
         else:
             return resp
-
 
 
 @api.route("/getAll")
 class PostFetchAll(Resource):
     @api.marshal_list_with(postInfo)
-    @api.doc(params = {'q': 'Search query', 'page' : 'Page number for pagination'})
+    @api.doc(params={'q': 'Search query', 'page': 'Page number for pagination'})
     def get(self):
         '''
-        Get all Posts. If a query is given, fetch all posts that match query. 
+        Get all Posts. If a query is given, fetch all posts that match query.
         '''
 
         q = request.args.get("q")
@@ -52,101 +54,126 @@ class PostFetchAll(Resource):
         resp = PostService.get_post_by_query(q, page)
         if resp[1] != 200:
             abort(403, resp)
-        
+
         else:
             return resp
 
 
-@api.route('/')
+@api.route('/create')
 class CreateNewPost(Resource):
     @login_required
     @api.marshal_with(postInfo)
     @api.expect(post)
     def post(self):
         """
-        Create New Post. Takes post title and post body as payload. 
-        Login is required. 
+        Create New Post. Takes post title and post body as payload.
+        Login is required.
         """
         new_post_data = request.json
         resp = PostService.create_new_post(new_post_data)
-        
+
         if resp[1] != 200:
             abort(403, resp)
-        
+
         else:
             return resp
 
-@api.route('/update/<id>')
+
+@api.route('/<id>/update')
 class UpdatePost(Resource):
     @login_required
     @api.marshal_with(postInfo)
     @api.expect(post)
     def post(self, id):
         """
-        Update post with given ID. User needs to be authenticated properly. 
-        """ 
+        Update post with given ID. User needs to be authenticated properly.
+        """
         post_data = request.json
         resp = PostService.update_post(post_data, id)
 
         if resp[1] != 200:
             abort(403, resp)
-        
+
         else:
             return resp
 
 
-@api.route('/delete/<id>')
+@api.route('/<id>/delete')
 class DeletePost(Resource):
     @login_required
-    @api.doc(params = {'id': 'Post ID'})
-
+    @api.doc(params={'id': 'Post ID'})
     def delete(self, id):
         """
-        Delete post with given ID. User needs to be authenticated
+        Delete post with given ID. User needs to be authenticated.
         """
-        resp = PostService.delete_post({'post_id' : id})
+        resp = PostService.delete_post({'post_id': id})
         if resp[1] != 200:
             abort(403, resp)
-        
+
         else:
             return resp
+
 
 @api.route('/<id>/upvote')
 class UpvotePost(Resource):
     @login_required
     @api.marshal_with(reactionInfo)
-    @api.doc(params = {'id' : 'Post ID'})
-
+    @api.doc(params={'id': 'Post ID'})
     def post(self, id):
         resp = PostService.upvote_post(id)
         if resp[1] != 200:
             abort(403, resp)
-        
+
         else:
             return resp
-        
+
+
 @api.route('/<id>/downvote')
 class DownvotePost(Resource):
     @login_required
     @api.marshal_with(reactionInfo)
-    @api.doc(params = {'id' : 'Post ID'})
-
+    @api.doc(params={'id': 'Post ID'})
     def post(self, id):
         resp = PostService.downvote_post(id)
         if resp[1] != 200:
             abort(403, resp)
-        
+
         else:
             return resp
+
 
 @api.route('/<id>/comments')
 class fetchAllComments(Resource):
     @api.marshal_list_with(commentInfo)
     def get(self, id):
         resp = PostService.fetch_all_comments(id)
-        
+
         if resp[1] != 200:
             abort(403, resp)
-        
+
+        else:
+            return resp
+
+
+@api.route('/<id>/reactions')
+class fetchReactionInfo(Resource):
+    @api.marshal_with(reactionInfo)
+    def get(self, id):
+        resp = PostService.fetch_reaction_info(id)
+        if resp[1] != 200:
+            abort(403, resp)
+
+        else:
+            return resp
+
+
+@api.route('/<id>/movieDetails')
+class fetchMovieInfo(Resource):
+    @api.marshal_with(movieInfo)
+    def get(self, id):
+        resp = PostService.get_movie_by_post(id)
+        if resp[1] != 200:
+            abort(403, resp)
+
         else:
             return resp

@@ -7,16 +7,17 @@ from flask import abort, current_app, jsonify, request
 from flask_restplus import Resource
 
 from app.main.service.movie_service import MovieService
-from app.main.util.dto import MovieDto
+from app.main.util.dto import MovieDto, PostDto
 
 api = MovieDto.api
 movie = MovieDto.movie
+postInfo = PostDto.postInfo
 
 
 @api.route('/<imdb_ID>')
 @api.route('/search/id/<imdb_ID>')
 class SearchIMDBID(Resource):
-    """ User Login Resource """
+    """ Search Movie by ID Resource """
     @api.doc("params: {'imdb_ID' : 'Movie ID on IMDB'}")
     @api.marshal_with(movie)
     def get(self, imdb_ID):
@@ -47,6 +48,17 @@ class NumberOfPages(Resource):
     def get(self):
         query = request.args.get("q")
         resp = MovieService.get_total_pages(query)
+        if resp[1] != 200:
+            return abort(403, resp[1])
+        else:
+            return resp
+
+
+@api.route('/<imdb_ID>/allPosts')
+class fetchPostsForMovie(Resource):
+    @api.marshal_list_with(postInfo)
+    def get(self, imdb_ID):
+        resp = MovieService.get_all_posts(imdb_ID)
         if resp[1] != 200:
             return abort(403, resp[1])
         else:

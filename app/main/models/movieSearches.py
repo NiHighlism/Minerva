@@ -1,8 +1,8 @@
-from app.main import db
-
 from logging import getLogger
 
 from flask import current_app
+
+from app.main import db
 
 LOG = getLogger(__name__)
 
@@ -104,7 +104,6 @@ def query_index(index, query, page, per_page):
 
     except Exception as e:
         LOG.error("FUCKED UP", exc_info=True)
-
 
 
 class SearchableMixin(object):
