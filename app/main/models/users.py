@@ -59,7 +59,7 @@ class User(db.Model, UserMixin):
     last_login = db.Column(db.DateTime)
     creation_time = db.Column(db.DateTime)
     is_verified = db.Column(db.Boolean, default=False)
-
+    
     # Relationships
     movie_list = db.relationship('Movie', backref="user")
     posts = db.relationship('Post', backref="user")
@@ -75,10 +75,10 @@ class User(db.Model, UserMixin):
         db.session.add(self)
         db.session.commit()
 
-    # @staticmethod
-    # @login_manager.user_loader
-    # def load_user(id):
-    #     return User.query.filter_by(id=id).first()
+    @staticmethod
+    @login_manager.user_loader
+    def load_user(id):
+        return User.query.filter_by(id=id).first()
 
     @staticmethod
     @login_manager.request_loader

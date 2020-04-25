@@ -42,7 +42,7 @@ class Movie(SearchableMixin, db.Model):
 
     # Columns
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
+    parent_user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     imdb_ID = db.Column(db.String(128), unique=True, nullable=False)
     title = db.Column(db.Text, nullable=False)
     year = db.Column(db.Integer)

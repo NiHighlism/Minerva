@@ -9,7 +9,7 @@ class AuthDto:
     user_auth = api.model('auth_details', {
         'username': fields.String(required=True, description='Login Username'),
         'password': fields.String(required=True, description='Login Password'),
-        'remember': fields.String(description='Stay Logged In'),
+        'remember': fields.String(description='Stay Logged In')
     })
 
     login_info = api.model('login_info', {
@@ -111,11 +111,13 @@ class MovieDto:
 
 class PostDto:
     api = Namespace('post', description='post related operations')
-
+    
+    tags = api.model('tags', {'tagList': fields.List(fields.String)})
     post = api.model('post', {
         'title': fields.String(description="Post title", required=True),
         'body': fields.String(description="Content of the post"),
-        'post_movie': fields.String(description="Movie the post is related to")
+        'post_movie': fields.String(description="Movie the post is related to"),
+        'tags' : fields.Nested(tags)
     })
 
     postInfo = api.model('postInfo', {
@@ -126,6 +128,8 @@ class PostDto:
         'post_movie': fields.String(description="Movie the post is related to"),
         'downvotes': fields.Integer(description="Downvotes to a Post"),
         'author_id': fields.Integer(description="ID of author of post"),
+        'author_name' : fields.String(),
+        'author_username' : fields.String(),
         'last_edit_time': fields.DateTime(description="Last edit timestamp of post")
     })
 

@@ -61,3 +61,23 @@ class getMovieList(Resource):
             return abort(403, resp[0])
         else:
             return resp
+
+@api.route("/<id>/getWatchList")
+class getWatchList(Resource):
+    @api.marshal_list_with(movie)
+    def get(self, id):
+        resp = UserService.get_watch_by_user(id)
+        if resp[1] != 200:
+            return abort(403, resp[0])
+        else:
+            return resp
+
+@api.route("/<id>/getBucketList")
+class getBucketList(Resource):
+    @api.marshal_list_with(movie)
+    def get(self, id):
+        resp = UserService.get_bucket_by_user(id)
+        if resp[1] != 200:
+            return abort(403, resp[0])
+        else:
+            return resp
