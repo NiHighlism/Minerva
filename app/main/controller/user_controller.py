@@ -100,6 +100,7 @@ class getBucketList(Resource):
             return abort(403, resp[0])
         else:
             return resp
+
 @api.route("/<username>/getRecommendList")
 class getRecommendList(Resource):
     @api.marshal_list_with(movieList)
@@ -109,7 +110,6 @@ class getRecommendList(Resource):
             return abort(403, resp[0])
         else:
             return resp
-
 
 @api.route("/<username>/posts")
 class GetPostsByUser(Resource):
