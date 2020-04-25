@@ -134,6 +134,7 @@ class PostDto:
         'upvotes': fields.Integer(description="Upvotes to a Post"),
         'post_movie': fields.String(description="Movie the post is related to"),
         'downvotes': fields.Integer(description="Downvotes to a Post"),
+        'tags' : fields.Nested(tags),
         'author_id': fields.Integer(description="ID of author of post"),
         'author_name' : fields.String(),
         'author_username' : fields.String(),
