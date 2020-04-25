@@ -5,12 +5,15 @@ relevant junction tables
 import datetime
 
 from sqlalchemy.sql import and_, select
+from sqlalchemy.ext.declarative import declarative_base
 
-from app.main import db, login_manager
+from app.main import db
+from app.main.models.base import Base
 from app.main.models.comments import Comment
+from app.main.models.postSearches import SearchableMixin
 
 
-class Post(db.Model):
+class Post(Base, SearchableMixin):
     """
     Description of User model.
     Columns
@@ -25,40 +28,40 @@ class Post(db.Model):
     # Relationships
     :comments: Relationship -> Comments (one to many)
     """
-
     # Columns
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, db.ForeignKey("base.id"), primary_key=True)
+    post_id = db.Column(db.Integer, autoincrement=True, primary_key=True, unique=True)
     title = db.Column(db.Text, nullable=False)
-    author_id = db.Column(db.Integer, db.ForeignKey("user.id"))
-    upvotes = db.Column(db.Integer, default=0)
-    downvotes = db.Column(db.Integer, default=0)
-    creation_time = db.Column(db.DateTime, default=datetime.datetime.now())
-    last_edit_time = db.Column(db.DateTime, default=datetime.datetime.now())
-    post_body = db.Column(db.Text)
 
-    # Relationships
-    comments = db.relationship('Comment', backref="post")
+    __searchable__ = ['title', 'body'] 
 
-    def __init__(self, title, author_id, post_body):
+    __mapper_args__ = {
+        'polymorphic_identity':'post',
+        'inherit_condition': (id == Base.id)
+    }
+
+    comments = db.relationship('Comment', primaryjoin="(Post.post_id == Comment.parent_post_id)", 
+                backref=db.backref('post'), lazy='dynamic') 
+
+    def __init__(self, author_id, title, post_body):
+        super().__init__(author_id, post_body, "post")
         self.title = title
-        self.author_id = author_id
-        self.post_body = post_body
-
         db.session.add(self)
         db.session.commit()
 
-    def upvote_post(self, user_id):
-        upvote = Reaction(1, user_id, self.id)
-
-        self.upvote_list.append(upvote)
+    def add_comment(self, author_id, comment_body):
+        parent_post_id = self.id
+        comment = Comment(author_id, parent_post_id, comment_body)
+        self.comments.append(comment)
         db.session.commit()
 
-    def downvote_post(self, user_id):
-        downvote = Reaction(-1, user_id, self.id)
+        return comment.id
 
-        self.downvote_list.append(downvote)
-        db.session.commit()
 
     def update_col(self, key, value):
         setattr(self, key, value)
+        db.session.commit()
+
+    def delete_post(self, post_id):
+        post = Post.query.filter_by(id=post_id).delete()
         db.session.commit()

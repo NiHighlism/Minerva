@@ -9,7 +9,7 @@ from flask_login import UserMixin
 from sqlalchemy.sql import and_, select
 
 from app.main import db, login_manager
-from app.main.models.comments import Comment
+# from app.main.models.comments import Comment
 from app.main.models.movies import Movie
 from app.main.models.posts import Post
 
@@ -61,7 +61,7 @@ class User(db.Model, UserMixin):
     watch_list = db.relationship('Movie', backref="user")
     bucket_list = db.relationship('Movie', backref="User")
     posts = db.relationship('Post', backref="user")
-    comments = db.relationship('Comment', backref="user")
+    # comments = db.relationship('Comment', backref="user")
 
     def __init__(self, username, password, email):
         self.username = username

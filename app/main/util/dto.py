@@ -36,6 +36,7 @@ class UserDto:
     })
 
     userInfo = api.model('userInfo', {
+        'user_ID' : fields.String(required=True, description="User ID"),
         'username': fields.String(required=True, description='user username'),
         'first_name': fields.String(description='first name', default=""),
         'last_name': fields.String(description="last name", default=""),
@@ -92,4 +93,45 @@ class MovieDto:
         'metascore': fields.String(default="N/A", description="Metacritic score of Movie"),
         'poster_url': fields.String(description="URL of poster from IMDB"),
         'box_office': fields.String(description="Box office collection in dollars")
+    })
+
+class PostDto:
+    api = Namespace('post', description='post related operations')
+
+    post = api.model('post', {
+        'title': fields.String(description="Post title", required=True),
+        'body': fields.String(description="Content of the post"),
+    })
+
+    postInfo = api.model('postInfo', {
+        'id' : fields.Integer(description="ID of post"),
+        'title' : fields.String(description="Title of post"),
+        'body' : fields.String(description="Post content body"),
+        'upvotes' : fields.Integer(description="Upvotes to a Post"),
+        'downvotes' : fields.Integer(description="Downvotes to a Post"),
+        'author_id' : fields.Integer(description="ID of author of post"),
+        'last_edit_time' : fields.DateTime(description="Last edit timestamp of post")
+    })
+
+    reactionInfo = api.model('reactionInfo', {
+        'upvotes' : fields.Integer(description="Total number of upvotes"),
+        'downvotes' : fields.Integer(description="Total number of downvotes"),
+        'score': fields.Integer(description="upvotes - downvotes")
+    })
+
+class CommentDto:
+    api = Namespace('comment', description="Comment related operations")
+
+    comment = api.model('comment', {
+        'body' : fields.String(description="Body of the comment")
+    })
+
+    commentInfo = api.model('commentInfo', {
+        'id' : fields.Integer(description="ID of post"),
+        'body' : fields.String(description="Post content body"),
+        'upvotes' : fields.Integer(description="Upvotes to a Post"),
+        'downvotes' : fields.Integer(description="Downvotes to a Post"),
+        'author_id' : fields.Integer(description="ID of author of post"),
+        'parent_post_id' : fields.Integer(description="ID of parent post"),
+        'last_edit_time' : fields.DateTime(description="Last edit timestamp of post")
     })

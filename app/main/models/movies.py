@@ -8,7 +8,7 @@ import json
 from sqlalchemy.sql import and_, select
 
 from app.main import db, login_manager
-from app.main.models.searches import SearchableMixin
+from app.main.models.movieSearches import SearchableMixin
 
 
 class Movie(SearchableMixin, db.Model):
