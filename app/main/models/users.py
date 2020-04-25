@@ -75,10 +75,10 @@ class User(db.Model, UserMixin):
         db.session.add(self)
         db.session.commit()
 
-    # @staticmethod
-    # @login_manager.user_loader
-    # def load_user(id):
-    #     return User.query.filter_by(id=id).first()
+    @staticmethod
+    @login_manager.user_loader
+    def load_user(id):
+        return User.query.filter_by(id=id).first()
 
     @staticmethod
     @login_manager.request_loader
