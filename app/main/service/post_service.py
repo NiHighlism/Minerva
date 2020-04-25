@@ -299,6 +299,10 @@ class PostService:
             post = Post.query.filter_by(id=post_id).first()
 
             comment_list = post.comments.all()
+            for comment in comment_list:
+                author_id = comment.author_id
+                author = User.query.filter_by(id=author_id).first()
+                comment.author_username = author.username
             return comment_list, 200
 
         except BaseException:

@@ -1,7 +1,7 @@
 import csv
-import requests
-
 from itertools import islice
+
+import requests
 
 f = open("bollywoodMovie.csv")
 reader = csv.reader(f)

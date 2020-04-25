@@ -161,6 +161,7 @@ class CommentDto:
         'upvotes': fields.Integer(description="Upvotes to a Post"),
         'downvotes': fields.Integer(description="Downvotes to a Post"),
         'author_id': fields.Integer(description="ID of author of post"),
+        'author_username': fields.String(default=""),
         'parent_post_id': fields.Integer(description="ID of parent post"),
         'last_edit_time': fields.DateTime(description="Last edit timestamp of post")
     })

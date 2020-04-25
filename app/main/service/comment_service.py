@@ -21,6 +21,9 @@ class CommentService:
     def get_comment_by_id(comment_id):
         try:
             comment = Comment.query.filter_by(id=comment_id).first()
+            author_id = comment.author_id
+            author = User.query.filter_by(id=author_id).first()
+            comment.author_username = author.username
             return comment, 200
 
         except BaseException:

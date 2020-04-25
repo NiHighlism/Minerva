@@ -452,6 +452,8 @@ class UserService:
             user_id = user.id
 
             posts = Post.query.filter_by(author_id=user_id).all()
+            for post in posts:
+                post.numComments = len(post.comments.all())
             return posts, 200
 
         except BaseException:
