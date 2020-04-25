@@ -74,10 +74,15 @@ class UserDto:
 class MovieDto:
     api = Namespace('movie', description='movie related operations')
 
-    movieList = api.model('movieList', {
-        'imdb_ID_list' : fields.String(),
-        'movie_list' : fields.String(required=True)
+    movieList = api.model('movie_list', {
+        'imdb_ID' : fields.String,
+        'movie' : fields.String
     })
+
+    # movieList = api.model('movieList', {
+    #     'response' : fields.List(fields.String),
+    #     'imdbList' : fields.List(fields.String)
+    # })
 
     genre = api.model('genre', {'genreList': fields.List(fields.String)})
     director = api.model(
