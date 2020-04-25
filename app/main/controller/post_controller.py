@@ -72,12 +72,7 @@ class CreateNewPost(Resource):
         print(new_post_data)
         resp = PostService.create_new_post(new_post_data)
 
-        if resp[1] != 200:
-            abort(403, resp)
-
-        else:
-            return resp
-
+        return resp
 
 @api.route('/<id>/update')
 class UpdatePost(Resource):

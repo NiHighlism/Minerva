@@ -112,7 +112,7 @@ class PostService:
 
                 LOG.info(
                     'Post already present in database. Redirect to Main Page')
-                return response_object, 300
+                return response_object, 401
 
             post = Post(current_user_id, post_movie, post_title, post_body, tags)
             response_object = {

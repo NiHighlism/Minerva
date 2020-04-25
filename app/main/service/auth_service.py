@@ -245,7 +245,7 @@ Minerva""")
             user.setVerified()
             response_object = {
                 'status': 'Success',
-                'message': 'Email Verified Successfully, head to https://iit-techambit.in',
+                'message': 'Email Verified Successfully, head over to the homepage',
             }
         else:
             response_object = {
