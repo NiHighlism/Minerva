@@ -12,6 +12,7 @@ from app.main import db
 from app.main.models.comments import Comment
 from app.main.models.movies import Movie
 from app.main.models.posts import Post
+from app.main.models.users import User
 from app.main.models.reactions import Reaction
 
 LOG = getLogger(__name__)
@@ -22,6 +23,12 @@ class PostService:
     def get_post_by_id(post_id):
         try:
             post = Post.query.filter_by(id=post_id).first()
+            author_id = post.author_id
+            author = User.query.filter_by(id=author_id).first()
+
+            post.author_name = author.first_name + " " + author.last_name
+            post.author_username = author.username
+
             return post, 200
 
         except BaseException:
@@ -45,12 +52,28 @@ class PostService:
                 res_objects = res.all()
 
                 post_results = [post for post in res_objects]
+
+                for post in post_results:
+                    author_id = post.author_id
+                    author = User.query.filter_by(id=author_id).first()
+
+                    post.author_name = author.first_name + " " + author.last_name
+                    post.author_username = author.username
+                
                 return post_results, 200
 
             else:
                 res_objects = Post.query.all()
 
                 post_results = [post for post in res_objects]
+
+                for post in post_results:
+                    author_id = post.author_id
+                    author = User.query.filter_by(id=author_id).first()
+
+                    post.author_name = author.first_name + " " + author.last_name
+                    post.author_username = author.username
+
                 totalResults = len(post_results)
 
                 results_per_page = int(current_app.config['RESULTS_PER_PAGE'])
@@ -78,6 +101,7 @@ class PostService:
             post_title = post_data.get('title')
             post_body = post_data.get('body')
             post_movie = post_data.get('post_movie')
+            tags = post_data.get('tags')
 
             post = Post.query.filter_by(title=post_title).first()
             if post is not None:
@@ -90,7 +114,7 @@ class PostService:
                     'Post already present in database. Redirect to Main Page')
                 return response_object, 300
 
-            post = Post(current_user_id, post_movie, post_title, post_body)
+            post = Post(current_user_id, post_movie, post_title, post_body, tags)
             response_object = {
                 'status': 'success',
                 'message': 'Post added successfully'
@@ -131,6 +155,12 @@ class PostService:
                 post.update_col(key, post_data[key])
 
             post.update_col('last_edit_time', datetime.datetime.now())
+
+            author_id = post.author_id
+            author = User.query.filter_by(id=author_id).first()
+
+            post.author_name = author.first_name + " " + author.last_name
+            post.author_username = author.username
 
             return post, 200
 

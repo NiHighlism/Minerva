@@ -9,7 +9,7 @@ class AuthDto:
     user_auth = api.model('auth_details', {
         'username': fields.String(required=True, description='Login Username'),
         'password': fields.String(required=True, description='Login Password'),
-        'remember': fields.String(description='Stay Logged In'),
+        'remember': fields.String(description='Stay Logged In')
     })
 
     login_info = api.model('login_info', {
@@ -31,11 +31,8 @@ class AuthDto:
 
 class UserDto:
     api = Namespace('user', description='user related operations')
-    favourites = api.model('favourites', {
-        'movie': fields.String(description="Favourite Movie", default=""),
-        'actor': fields.String(description="Favourite Actor", default=""),
-        'genre': fields.String(description="Favourite genre", default="")
-    })
+
+    movie_list = api.model('movie_list', {'movie_list': fields.List(fields.String), 'imdb_ID' : fields.List(fields.Integer)})
 
     user = api.model('user', {
         'first_name': fields.String(required=False),
@@ -50,15 +47,16 @@ class UserDto:
         'username': fields.String(required=True, description='user username'),
         'first_name': fields.String(description='first name', default=""),
         'last_name': fields.String(description="last name", default=""),
-        'dob': fields.DateTime(dt_format='rfc822', description="date of birth"),
         'email': fields.String(required=True, description='user email address'),
         'fb_handle': fields.String(description="facebook handle"),
         'instagram_handle': fields.String(description="medium handle"),
         'twitter_handle': fields.String(description="twitter handle"),
-        'favourites': fields.Nested(favourites),
         'bio': fields.String(description="biography"),
-        'occupation': fields.String(description="occupation"),
-        'last_login': fields.DateTime(dt_format='rfc822', description="last login time")
+        'seen_list' : fields.Nested(movie_list),
+        'bucket_list' : fields.Nested(movie_list),
+        'recommend_list' : fields.Nested(movie_list),
+        'last_login': fields.DateTime(dt_format='rfc822', description="last login time"),
+        'create_date' : fields.String()
     })
 
     updateInfo = api.model('userInfo', {
@@ -68,7 +66,6 @@ class UserDto:
         'fb_handle': fields.String(description="facebook handle"),
         'instagram_handle': fields.String(description="medium handle"),
         'twitter_handle': fields.String(description="twitter handle"),
-        'favourites': fields.Nested(favourites),
         'bio': fields.String(description="biography"),
         'occupation': fields.String(description="occupation")
     })
@@ -76,6 +73,11 @@ class UserDto:
 
 class MovieDto:
     api = Namespace('movie', description='movie related operations')
+
+    movieList = api.model('movieList', {
+        'imdb_ID_list' : fields.String(),
+        'movie_list' : fields.String(required=True)
+    })
 
     genre = api.model('genre', {'genreList': fields.List(fields.String)})
     director = api.model(
@@ -111,11 +113,13 @@ class MovieDto:
 
 class PostDto:
     api = Namespace('post', description='post related operations')
-
+    
+    tags = api.model('tags', {'tagList': fields.List(fields.String)})
     post = api.model('post', {
         'title': fields.String(description="Post title", required=True),
         'body': fields.String(description="Content of the post"),
-        'post_movie': fields.String(description="Movie the post is related to")
+        'post_movie': fields.String(description="Movie the post is related to"),
+        'tags' : fields.Nested(tags)
     })
 
     postInfo = api.model('postInfo', {
@@ -126,6 +130,8 @@ class PostDto:
         'post_movie': fields.String(description="Movie the post is related to"),
         'downvotes': fields.Integer(description="Downvotes to a Post"),
         'author_id': fields.Integer(description="ID of author of post"),
+        'author_name' : fields.String(),
+        'author_username' : fields.String(),
         'last_edit_time': fields.DateTime(description="Last edit timestamp of post")
     })
 

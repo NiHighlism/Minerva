@@ -12,6 +12,7 @@ user = UserDto.user
 userInfo = UserDto.userInfo
 updateInfo = UserDto.updateInfo
 movie = MovieDto.movie
+movieList = MovieDto.movieList
 
 
 @api.route('/<username>')
@@ -37,14 +38,42 @@ class UpdateUserInfo(Resource):
     # TODO: Superuser can't change username parameter.
 
 
-@api.route("/add/list")
-class AddMovieList(Resource):
+@api.route("/add/seenList")
+class AddSeenMovieList(Resource):
     @login_required
-    @api.doc(params={"imdb_ID": "IMDB ID of movie to be added. "})
-    @api.marshal_list_with(movie)
-    def get(self):
-        imdb_ID = request.args.get("imdb_ID")
-        resp = UserService.add_to_movie_list(imdb_ID)
+    @api.marshal_list_with(movieList)
+    @api.expect(movieList)
+    def post(self):
+        post_data = request.json
+        resp = UserService.add_to_seen_list(post_data)
+
+        if resp[1] != 200:
+            return abort(403, resp[0])
+        else:
+            return resp
+
+@api.route("/add/bucketList")
+class AdducketMovieList(Resource):
+    @login_required
+    @api.marshal_list_with(movieList)
+    @api.expect(movieList)
+    def post(self):
+        post_data = request.json
+        resp = UserService.add_to_bucket_list(post_data)
+
+        if resp[1] != 200:
+            return abort(403, resp[0])
+        else:
+            return resp
+
+@api.route("/add/recommendList")
+class AddRecommendMovieList(Resource):
+    @login_required
+    @api.marshal_list_with(movieList)
+    @api.expect(movieList)
+    def post(self):
+        post_data = request.json
+        resp = UserService.add_to_recommend_list(post_data)
 
         if resp[1] != 200:
             return abort(403, resp[0])
@@ -52,11 +81,29 @@ class AddMovieList(Resource):
             return resp
 
 
-@api.route("/<username>/getMovieList")
-class getMovieList(Resource):
-    @api.marshal_list_with(movie)
+@api.route("/<username>/getSeenList")
+class getSeenList(Resource):
+    @api.marshal_list_with(movieList)
     def get(self, username):
-        resp = UserService.get_movie_list(username)
+        resp = UserService.get_seen_list(username)
+        if resp[1] != 200:
+            return abort(403, resp[0])
+        else:
+            return resp
+@api.route("/<username>/getBucketList")
+class getBucketList(Resource):
+    @api.marshal_list_with(movieList)
+    def get(self, username):
+        resp = UserService.get_bucket_list(username)
+        if resp[1] != 200:
+            return abort(403, resp[0])
+        else:
+            return resp
+@api.route("/<username>/getRecommendList")
+class getRecommendList(Resource):
+    @api.marshal_list_with(movieList)
+    def get(self, username):
+        resp = UserService.get_recommend_list(username)
         if resp[1] != 200:
             return abort(403, resp[0])
         else:

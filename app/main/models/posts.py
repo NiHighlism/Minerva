@@ -37,7 +37,9 @@ class Post(Base, SearchableMixin):
 
     post_movie = db.Column(db.String(20))
 
-    __searchable__ = ['title', 'body']
+    tags = db.Column(db.JSON)
+
+    __searchable__ = ['title', 'body', 'tags']
 
     __mapper_args__ = {
         'polymorphic_identity': 'post',
@@ -47,10 +49,11 @@ class Post(Base, SearchableMixin):
     comments = db.relationship('Comment', primaryjoin="(Post.post_id == Comment.parent_post_id)",
                                backref=db.backref('post'), lazy='dynamic')
 
-    def __init__(self, author_id, post_movie, title, post_body):
+    def __init__(self, author_id, post_movie, title, post_body, tags):
         super().__init__(author_id, post_body, "post")
         self.title = title
         self.post_movie = post_movie
+        self.tags = tags
         db.session.add(self)
         db.session.commit()
 
