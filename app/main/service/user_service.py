@@ -8,6 +8,7 @@ from flask_login import current_user
 from app.main import db
 from app.main.models.movies import Movie
 from app.main.models.users import User
+from app.main.models.posts import Post
 
 LOG = getLogger(__name__)
 
@@ -443,4 +444,24 @@ class UserService:
             }
 
             return response_object, 500
+
+    @staticmethod
+    def get_user_posts(username):
+        try:
+            user = User.query.filter_by(username=username).first()
+            user_id = user.id
+
+            posts = Post.query.filter_by(author_id=user_id).all()
+            return posts, 200
+
+
+        except:
+            LOG.error("Couldn't be fetched", exc_info=True)
+            response_object = {
+                'status': 'fail',
+                'message': 'Try again later. '
+            }
+
+            return response_object, 500
+
 

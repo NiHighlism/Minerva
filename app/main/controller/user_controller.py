@@ -4,7 +4,7 @@ from flask_login import current_user, login_required
 from flask_restplus import Resource
 
 from app.main.service.user_service import UserService
-from app.main.util.dto import AuthDto, MovieDto, UserDto
+from app.main.util.dto import AuthDto, MovieDto, UserDto, PostDto
 
 api = UserDto.api
 user_auth = AuthDto.user_auth
@@ -13,6 +13,7 @@ userInfo = UserDto.userInfo
 updateInfo = UserDto.updateInfo
 movie = MovieDto.movie
 movieList = MovieDto.movieList
+post = PostDto.postInfo
 
 
 @api.route('/<username>')
@@ -104,6 +105,17 @@ class getRecommendList(Resource):
     @api.marshal_list_with(movieList)
     def get(self, username):
         resp = UserService.get_recommend_list(username)
+        if resp[1] != 200:
+            return abort(403, resp[0])
+        else:
+            return resp
+
+
+@api.route("/<username>/posts")
+class GetPostsByUser(Resource):
+    @api.marshal_list_with(post)
+    def get(self, username):
+        resp = UserService.get_user_posts(username)
         if resp[1] != 200:
             return abort(403, resp[0])
         else:
