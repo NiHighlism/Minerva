@@ -425,7 +425,6 @@ class UserService:
             user = User.query.filter_by(username=username).first()
             movie_list = user.recommend_list_titles
             imdb_ID_list = user.recommend_list_IDs
-
             resp = []
             for (movie, imdb_ID) in zip(movie_list['movie_list'], imdb_ID_list['imdb_ID_list']):
                 x = {
@@ -433,7 +432,7 @@ class UserService:
                     "movie" : movie
                 }
                 resp.append(x)
-                
+
             return resp,  200
         
         except Exception:
