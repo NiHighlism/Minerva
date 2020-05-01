@@ -374,10 +374,14 @@ class UserService:
             movie_list = user.seen_list_titles
             imdb_ID_list = user.seen_list_IDs
 
-            resp =  {
-                "movie_list" : movie_list,
-                "imdb_ID_list" : imdb_ID_list
-            }
+            resp = []
+            for (movie, imdb_ID) in zip(movie_list['movie_list'], imdb_ID_list['imdb_ID_list']):
+                x = {
+                    "imdb_ID" : imdb_ID,
+                    "movie" : movie
+                }
+                resp.append(x)
+                
             return resp,  200
         
         except Exception:
@@ -395,11 +399,14 @@ class UserService:
             user = User.query.filter_by(username=username).first()
             movie_list = user.bucket_list_titles
             imdb_ID_list = user.bucket_list_IDs
+            resp = []
+            for (movie, imdb_ID) in zip(movie_list['movie_list'], imdb_ID_list['imdb_ID_list']):
+                x = {
+                    "imdb_ID" : imdb_ID,
+                    "movie" : movie
+                }
+                resp.append(x)
 
-            resp =  {
-                "movie_list" : movie_list,
-                "imdb_ID_list" : imdb_ID_list
-            }
             return resp,  200
         
         except Exception:
@@ -418,10 +425,14 @@ class UserService:
             movie_list = user.recommend_list_titles
             imdb_ID_list = user.recommend_list_IDs
 
-            resp =  {
-                "movie_list" : movie_list,
-                "imdb_ID_list" : imdb_ID_list
-            }
+            resp = []
+            for (movie, imdb_ID) in zip(movie_list['movie_list'], imdb_ID_list['imdb_ID_list']):
+                x = {
+                    "imdb_ID" : imdb_ID,
+                    "movie" : movie
+                }
+                resp.append(x)
+                
             return resp,  200
         
         except Exception:

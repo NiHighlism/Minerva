@@ -83,7 +83,7 @@ class AddRecommendMovieList(Resource):
 
 @api.route("/<username>/getSeenList")
 class getSeenList(Resource):
-    @api.marshal_list_with(movieList)
+    @api.marshal_with(movieList)
     def get(self, username):
         resp = UserService.get_seen_list(username)
         if resp[1] != 200:
