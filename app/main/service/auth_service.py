@@ -153,9 +153,6 @@ class Authentication:
                 'message': 'User added Successfully',
             }
 
-            user.update_col('first_name', data.get('first_name'))
-            user.update_col('last_name', data.get('last_name'))
-
             return response_object, 200
 
         except BaseException:

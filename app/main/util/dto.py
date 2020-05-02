@@ -35,8 +35,6 @@ class UserDto:
     movie_list = api.model('movie_list', {'movie_list': fields.List(fields.String), 'imdb_ID' : fields.List(fields.Integer)})
 
     user = api.model('user', {
-        'first_name': fields.String(required=False),
-        'last_name': fields.String(required=False),
         'username': fields.String(required=True, description='user username'),
         'password': fields.String(required=True, description='user password'),
         'email': fields.String(required=True, description='user email address'),
