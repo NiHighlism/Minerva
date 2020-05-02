@@ -87,7 +87,7 @@ def query_index(index, query, page, per_page):
     print("DEETS")
     print(page)
     print(per_page)
-    
+
     if not current_app.elasticsearch:
         return [], 0
     try:

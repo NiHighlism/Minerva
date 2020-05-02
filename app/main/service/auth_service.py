@@ -48,8 +48,8 @@ class Authentication:
             user = User.query.filter_by(username=data.get('username')).first()
             if user is None:
                 response_object = {
-                    'status' : 'fail',
-                    'message' : 'User does not exist. '
+                    'status': 'fail',
+                    'message': 'User does not exist. '
                 }
                 return response_object, 403
             if user and user.check_password(data.get('password')):
@@ -242,7 +242,7 @@ Minerva""")
             user.setVerified()
             response_object = {
                 'status': 'Success',
-                'message': 'Email Verified Successfully, head to https://iit-techambit.in',
+                'message': 'Email Verified Successfully, head over to the homepage',
             }
         else:
             response_object = {

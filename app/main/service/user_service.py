@@ -7,8 +7,8 @@ from flask_login import current_user
 
 from app.main import db
 from app.main.models.movies import Movie
-from app.main.models.users import User
 from app.main.models.posts import Post
+from app.main.models.users import User
 
 LOG = getLogger(__name__)
 
@@ -26,7 +26,7 @@ class UserService:
                     'message': 'User does not exist'
                 }
                 return response_object, 400
-            
+
             create_date = user.creation_time
             create_date = datetime.datetime.strftime(create_date, "%d %B")
             user.create_date = create_date
@@ -75,7 +75,6 @@ class UserService:
             }
             return response_object, 500
 
-
     @staticmethod
     def add_to_seen_list(data):
         try:
@@ -86,53 +85,54 @@ class UserService:
                 res, totalResults = Movie.search(title, 1, 5)
                 res_objects = res.all()
 
-                movie = Movie.query.filter_by(imdb_ID=res_objects[0].imdb_ID).first()
+                movie = Movie.query.filter_by(
+                    imdb_ID=res_objects[0].imdb_ID).first()
                 user = User.query.filter_by(id=current_user.id).first()
-                
+
                 if len(user.seen_list_titles) == 0:
                     print("Khali Hai")
                     movie_list = []
-                    imdb_ID_list = []    
+                    imdb_ID_list = []
 
                 else:
                     movie_list = user.seen_list_titles['movie_list']
                     imdb_ID_list = user.seen_list_IDs['imdb_ID_list']
 
-                
                 if movie.imdb_ID not in imdb_ID_list:
                     movie_list.append(movie.title)
                     imdb_ID_list.append(movie.imdb_ID)
 
                     res = {
-                        'movie_list' : movie_list,
-                        'imdb_ID_list' : imdb_ID_list
+                        'movie_list': movie_list,
+                        'imdb_ID_list': imdb_ID_list
                     }
 
                     print("RES")
                     print(res)
 
-        
-                    setattr(user, 'seen_list_IDs', {'imdb_ID_list' : imdb_ID_list})
+                    setattr(user, 'seen_list_IDs', {
+                            'imdb_ID_list': imdb_ID_list})
                     db.session.commit()
-                    setattr(user, 'seen_list_titles', {'movie_list' : movie_list})
+                    setattr(user, 'seen_list_titles', {
+                            'movie_list': movie_list})
                     db.session.commit()
-                    setattr(user, 'seen_list_IDs', {'imdb_ID_list' : imdb_ID_list})
+                    setattr(user, 'seen_list_IDs', {
+                            'imdb_ID_list': imdb_ID_list})
                     db.session.commit()
 
-            
             else:
                 user = User.query.filter_by(id=current_user.id).first()
                 movie = Movie.query.filter_by(imdb_ID=imdb_ID).first()
-        
+
                 if len(user.seen_list_titles) == 0:
                     print("Khali Hai")
                     movie_list = []
-                    imdb_ID_list = []    
+                    imdb_ID_list = []
 
                 else:
                     movie_list = user.seen_list_titles['movie_list']
                     imdb_ID_list = user.seen_list_IDs['imdb_ID_list']
-                
+
                 print(movie_list)
                 print(imdb_ID_list)
 
@@ -141,27 +141,28 @@ class UserService:
                     imdb_ID_list.append(movie.imdb_ID)
 
                     res = {
-                        'movie_list' : movie_list,
-                        'imdb_ID_list' : imdb_ID_list
+                        'movie_list': movie_list,
+                        'imdb_ID_list': imdb_ID_list
                     }
 
                     print("RES")
                     print(res)
 
-        
-                    setattr(user, 'seen_list_IDs', {'imdb_ID_list' : imdb_ID_list})
+                    setattr(user, 'seen_list_IDs', {
+                            'imdb_ID_list': imdb_ID_list})
                     db.session.commit()
-                    setattr(user, 'seen_list_titles', {'movie_list' : movie_list})
+                    setattr(user, 'seen_list_titles', {
+                            'movie_list': movie_list})
                     db.session.commit()
-                    setattr(user, 'seen_list_IDs', {'imdb_ID_list' : imdb_ID_list})
+                    setattr(user, 'seen_list_IDs', {
+                            'imdb_ID_list': imdb_ID_list})
                     db.session.commit()
 
-                
             user = User.query.filter_by(id=current_user.id).first()
 
             movie_list = user.seen_list_titles
             return movie_list, 200
-        
+
         except Exception:
             LOG.error("Movie couldn't be added to List.", exc_info=True)
             response_object = {
@@ -170,8 +171,6 @@ class UserService:
             }
 
             return response_object, 500
-
-    
 
     @staticmethod
     def add_to_bucket_list(data):
@@ -183,53 +182,54 @@ class UserService:
                 res, totalResults = Movie.search(title, 1, 5)
                 res_objects = res.all()
 
-                movie = Movie.query.filter_by(imdb_ID=res_objects[0].imdb_ID).first()
+                movie = Movie.query.filter_by(
+                    imdb_ID=res_objects[0].imdb_ID).first()
                 user = User.query.filter_by(id=current_user.id).first()
-                
+
                 if len(user.bucket_list_titles) == 0:
                     print("Khali Hai")
                     movie_list = []
-                    imdb_ID_list = []    
+                    imdb_ID_list = []
 
                 else:
                     movie_list = user.bucket_list_titles['movie_list']
                     imdb_ID_list = user.bucket_list_IDs['imdb_ID_list']
 
-                
                 if movie.imdb_ID not in imdb_ID_list:
                     movie_list.append(movie.title)
                     imdb_ID_list.append(movie.imdb_ID)
 
                     res = {
-                        'movie_list' : movie_list,
-                        'imdb_ID_list' : imdb_ID_list
+                        'movie_list': movie_list,
+                        'imdb_ID_list': imdb_ID_list
                     }
 
                     print("RES")
                     print(res)
 
-        
-                    setattr(user, 'bucket_list_IDs', {'imdb_ID_list' : imdb_ID_list})
+                    setattr(user, 'bucket_list_IDs', {
+                            'imdb_ID_list': imdb_ID_list})
                     db.session.commit()
-                    setattr(user, 'bucket_list_titles', {'movie_list' : movie_list})
+                    setattr(user, 'bucket_list_titles',
+                            {'movie_list': movie_list})
                     db.session.commit()
-                    setattr(user, 'bucket_list_IDs', {'imdb_ID_list' : imdb_ID_list})
+                    setattr(user, 'bucket_list_IDs', {
+                            'imdb_ID_list': imdb_ID_list})
                     db.session.commit()
 
-            
             else:
                 user = User.query.filter_by(id=current_user.id).first()
                 movie = Movie.query.filter_by(imdb_ID=imdb_ID).first()
-        
+
                 if len(user.bucket_list_titles) == 0:
                     print("Khali Hai")
                     movie_list = []
-                    imdb_ID_list = []    
+                    imdb_ID_list = []
 
                 else:
                     movie_list = user.bucket_list_titles['movie_list']
                     imdb_ID_list = user.bucket_list_IDs['imdb_ID_list']
-                
+
                 print(movie_list)
                 print(imdb_ID_list)
 
@@ -238,27 +238,28 @@ class UserService:
                     imdb_ID_list.append(movie.imdb_ID)
 
                     res = {
-                        'movie_list' : movie_list,
-                        'imdb_ID_list' : imdb_ID_list
+                        'movie_list': movie_list,
+                        'imdb_ID_list': imdb_ID_list
                     }
 
                     print("RES")
                     print(res)
 
-        
-                    setattr(user, 'bucket_list_IDs', {'imdb_ID_list' : imdb_ID_list})
+                    setattr(user, 'bucket_list_IDs', {
+                            'imdb_ID_list': imdb_ID_list})
                     db.session.commit()
-                    setattr(user, 'bucket_list_titles', {'movie_list' : movie_list})
+                    setattr(user, 'bucket_list_titles',
+                            {'movie_list': movie_list})
                     db.session.commit()
-                    setattr(user, 'bucket_list_IDs', {'imdb_ID_list' : imdb_ID_list})
+                    setattr(user, 'bucket_list_IDs', {
+                            'imdb_ID_list': imdb_ID_list})
                     db.session.commit()
 
-                
             user = User.query.filter_by(id=current_user.id).first()
 
             movie_list = user.bucket_list_titles
             return movie_list, 200
-        
+
         except Exception:
             LOG.error("Movie couldn't be added to List.", exc_info=True)
             response_object = {
@@ -278,53 +279,54 @@ class UserService:
                 res, totalResults = Movie.search(title, 1, 5)
                 res_objects = res.all()
 
-                movie = Movie.query.filter_by(imdb_ID=res_objects[0].imdb_ID).first()
+                movie = Movie.query.filter_by(
+                    imdb_ID=res_objects[0].imdb_ID).first()
                 user = User.query.filter_by(id=current_user.id).first()
-                
+
                 if len(user.recommend_list_titles) == 0:
                     print("Khali Hai")
                     movie_list = []
-                    imdb_ID_list = []    
+                    imdb_ID_list = []
 
                 else:
                     movie_list = user.recommend_list_titles['movie_list']
                     imdb_ID_list = user.recommend_list_IDs['imdb_ID_list']
 
-                
                 if movie.imdb_ID not in imdb_ID_list:
                     movie_list.append(movie.title)
                     imdb_ID_list.append(movie.imdb_ID)
 
                     res = {
-                        'movie_list' : movie_list,
-                        'imdb_ID_list' : imdb_ID_list
+                        'movie_list': movie_list,
+                        'imdb_ID_list': imdb_ID_list
                     }
 
                     print("RES")
                     print(res)
 
-        
-                    setattr(user, 'recommend_list_IDs', {'imdb_ID_list' : imdb_ID_list})
+                    setattr(user, 'recommend_list_IDs', {
+                            'imdb_ID_list': imdb_ID_list})
                     db.session.commit()
-                    setattr(user, 'recommend_list_titles', {'movie_list' : movie_list})
+                    setattr(user, 'recommend_list_titles',
+                            {'movie_list': movie_list})
                     db.session.commit()
-                    setattr(user, 'recommend_list_IDs', {'imdb_ID_list' : imdb_ID_list})
+                    setattr(user, 'recommend_list_IDs', {
+                            'imdb_ID_list': imdb_ID_list})
                     db.session.commit()
 
-            
             else:
                 user = User.query.filter_by(id=current_user.id).first()
                 movie = Movie.query.filter_by(imdb_ID=imdb_ID).first()
-        
+
                 if len(user.recommend_list_titles) == 0:
                     print("Khali Hai")
                     movie_list = []
-                    imdb_ID_list = []    
+                    imdb_ID_list = []
 
                 else:
                     movie_list = user.recommend_list_titles['movie_list']
                     imdb_ID_list = user.recommend_list_IDs['imdb_ID_list']
-                
+
                 print(movie_list)
                 print(imdb_ID_list)
 
@@ -333,31 +335,31 @@ class UserService:
                     imdb_ID_list.append(movie.imdb_ID)
 
                     res = {
-                        'movie_list' : movie_list,
-                        'imdb_ID_list' : imdb_ID_list
+                        'movie_list': movie_list,
+                        'imdb_ID_list': imdb_ID_list
                     }
 
                     print("RES")
                     print(res)
 
-        
-                    setattr(user, 'recommend_list_IDs', {'imdb_ID_list' : imdb_ID_list})
+                    setattr(user, 'recommend_list_IDs', {
+                            'imdb_ID_list': imdb_ID_list})
                     db.session.commit()
-                    setattr(user, 'recommend_list_titles', {'movie_list' : movie_list})
+                    setattr(user, 'recommend_list_titles',
+                            {'movie_list': movie_list})
                     db.session.commit()
-                    setattr(user, 'recommend_list_IDs', {'imdb_ID_list' : imdb_ID_list})
+                    setattr(user, 'recommend_list_IDs', {
+                            'imdb_ID_list': imdb_ID_list})
                     db.session.commit()
-
-                
 
             movie_list = user.recommend_list_titles
             id_list = user.recommend_list_IDs
             resp = {
-                "movie_list" : movie_list,
-                "imdb_ID_list" : id_list
+                "movie_list": movie_list,
+                "imdb_ID_list": id_list
             }
             return resp, 200
-        
+
         except Exception:
             LOG.error("Movie couldn't be added to List.", exc_info=True)
             response_object = {
@@ -366,7 +368,6 @@ class UserService:
             }
 
             return response_object, 500
-
 
     @staticmethod
     def get_seen_list(username):
@@ -378,13 +379,13 @@ class UserService:
             resp = []
             for (movie, imdb_ID) in zip(movie_list['movie_list'], imdb_ID_list['imdb_ID_list']):
                 x = {
-                    "imdb_ID" : imdb_ID,
-                    "movie" : movie
+                    "imdb_ID": imdb_ID,
+                    "movie": movie
                 }
                 resp.append(x)
-                
-            return resp,  200
-        
+
+            return resp, 200
+
         except Exception:
             LOG.error("Couldn't be fetched", exc_info=True)
             response_object = {
@@ -403,13 +404,13 @@ class UserService:
             resp = []
             for (movie, imdb_ID) in zip(movie_list['movie_list'], imdb_ID_list['imdb_ID_list']):
                 x = {
-                    "imdb_ID" : imdb_ID,
-                    "movie" : movie
+                    "imdb_ID": imdb_ID,
+                    "movie": movie
                 }
                 resp.append(x)
 
-            return resp,  200
-        
+            return resp, 200
+
         except Exception:
             LOG.error("Couldn't be fetched", exc_info=True)
             response_object = {
@@ -428,13 +429,13 @@ class UserService:
             resp = []
             for (movie, imdb_ID) in zip(movie_list['movie_list'], imdb_ID_list['imdb_ID_list']):
                 x = {
-                    "imdb_ID" : imdb_ID,
-                    "movie" : movie
+                    "imdb_ID": imdb_ID,
+                    "movie": movie
                 }
                 resp.append(x)
 
-            return resp,  200
-        
+            return resp, 200
+
         except Exception:
             LOG.error("Couldn't be fetched", exc_info=True)
             response_object = {
@@ -453,8 +454,7 @@ class UserService:
             posts = Post.query.filter_by(author_id=user_id).all()
             return posts, 200
 
-
-        except:
+        except BaseException:
             LOG.error("Couldn't be fetched", exc_info=True)
             response_object = {
                 'status': 'fail',
@@ -462,5 +462,3 @@ class UserService:
             }
 
             return response_object, 500
-
-

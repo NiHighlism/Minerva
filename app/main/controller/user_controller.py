@@ -4,7 +4,7 @@ from flask_login import current_user, login_required
 from flask_restplus import Resource
 
 from app.main.service.user_service import UserService
-from app.main.util.dto import AuthDto, MovieDto, UserDto, PostDto
+from app.main.util.dto import AuthDto, MovieDto, PostDto, UserDto
 
 api = UserDto.api
 user_auth = AuthDto.user_auth
@@ -53,6 +53,7 @@ class AddSeenMovieList(Resource):
         else:
             return resp
 
+
 @api.route("/add/bucketList")
 class AdducketMovieList(Resource):
     @login_required
@@ -66,6 +67,7 @@ class AdducketMovieList(Resource):
             return abort(403, resp[0])
         else:
             return resp
+
 
 @api.route("/add/recommendList")
 class AddRecommendMovieList(Resource):
@@ -91,6 +93,8 @@ class getSeenList(Resource):
             return abort(403, resp[0])
         else:
             return resp
+
+
 @api.route("/<username>/getBucketList")
 class getBucketList(Resource):
     @api.marshal_list_with(movieList)
@@ -101,6 +105,7 @@ class getBucketList(Resource):
         else:
             return resp
 
+
 @api.route("/<username>/getRecommendList")
 class getRecommendList(Resource):
     @api.marshal_list_with(movieList)
@@ -110,6 +115,7 @@ class getRecommendList(Resource):
             return abort(403, resp[0])
         else:
             return resp
+
 
 @api.route("/<username>/posts")
 class GetPostsByUser(Resource):
