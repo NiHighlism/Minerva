@@ -10,35 +10,6 @@ Created as part of Software Engineering Lab (CS29006) during my 4th semester (Sp
 
 ### Common Backend for Minerva
 
-.
-├── app
-│   ├── \_\_init\_\_.py
-│   ├── main
-│   │   ├── config.py
-│   │   ├── controller
-│   │   │   ├── auth_controller.py
-│   │   │   ├── post_controller.py
-│   │   │   └── user_controller.py
-|   |   ├── logging_config.py
-│   │   ├── models
-│   │   │   ├── movie.py
-│   │   │   └── user.py
-│   │   ├── service
-│   │   │   ├── auth_helper.py
-│   │   │   ├── movie_service.py
-│   │   │   └── user_service.py
-│   │   └── util
-│   │       └── dto.py
-│   └── test
-│       └── base.py
-|── .env
-├── manage.py
-├── Makefile
-├── Pipfile
-├── Pipfile.lock
-├── README.md
-└── requirements.txt
-
 Collect all similar endpoints in the `app/controller` folder. Use different files for logically dissimilar endpoints.
 
 NOTE: Most of the general config is loaded into the environment from the .env file which should be created from the provided .env.template
