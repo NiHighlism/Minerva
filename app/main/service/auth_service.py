@@ -152,6 +152,8 @@ class Authentication:
                 'status': 'success',
                 'message': 'User added Successfully',
             }
+            
+            user.update_col('bio', data.get('bio'))
 
             return response_object, 200
 
