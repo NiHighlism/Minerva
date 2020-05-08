@@ -8,6 +8,7 @@ pylint = "*"
 uuid = "*"
 flask-login = "*"
 autopep8 = "*"
+sphinx = "*"
 
 [packages]
 aniso8601 = "==7.0.0"
@@ -49,6 +50,7 @@ sqlalchemy-elasticquery = "*"
 elasticsearch = "*"
 flask-jwt-extended = "*"
 pyjwt = "*"
+rinohtype = "*"
 
 [requires]
 python_version = "3.6"
