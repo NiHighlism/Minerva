@@ -97,7 +97,7 @@ def query_index(index, query, page, per_page):
                 'query': {
                     'multi_match': {
                         'query': query,
-                        'fields': "*"
+                        'fields': [ "title^3", "year^2", "actors^2", "director^2", "*"]
                     }
                 },
                 "from": (page - 1) * per_page,
