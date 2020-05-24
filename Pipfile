@@ -51,6 +51,7 @@ elasticsearch = "*"
 flask-jwt-extended = "*"
 pyjwt = "*"
 rinohtype = "*"
+uwsgi = "*"
 
 [requires]
 python_version = "3.6"

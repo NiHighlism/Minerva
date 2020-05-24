@@ -3,7 +3,7 @@ from itertools import islice
 
 import requests
 
-f = open("ids1.csv")
+f = open("ids2.csv")
 reader = csv.reader(f)
 
 i = 0
