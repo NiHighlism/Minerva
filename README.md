@@ -1,14 +1,11 @@
-# Minerva
-[![forthebadge made-with-python](http://ForTheBadge.com/images/badges/made-with-python.svg)](https://www.python.org/) [![ForTheBadge built-with-love](http://ForTheBadge.com/images/badges/built-with-love.svg)](https://GitHub.com/Naereen/)
+# Vidura
 
-[![Build Status](https://travis-ci.org/mukul-mehta/Minerva.svg?branch=master)](https://travis-ci.org/mukul-mehta/Minerva)
-
-Minerva - A one-stop destination for everything Movie/TV Show Related!
+Vidura - A one-stop destination for everything Movie/TV Show Related!
 Created as part of Software Engineering Lab (CS29006) during my 4th semester (Spring 2020) - The semester that never was. 
 
 
 
-### Common Backend for Minerva
+### Common Backend for Vidura
 
 Collect all similar endpoints in the `app/controller` folder. Use different files for logically dissimilar endpoints.
 
@@ -74,9 +71,9 @@ make all
 
 ## Docker Container
 
-To build the container, make sure that the Dockerfile is present and run `docker build -t minerva:latest .`
+To build the container, make sure that the Dockerfile is present and run `docker build -t vidura:latest .`
 
-To run the application from the docker container, run `docker run minerva ARG` where `ARG` can be `db`, `run, test`, `shell` or `runserver`.
+To run the application from the docker container, run `docker run vidura ARG` where `ARG` can be `db`, `run, test`, `shell` or `runserver`.
 
 For more information, run `docker run common-backend --help`.
 
