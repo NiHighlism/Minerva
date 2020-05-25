@@ -39,7 +39,7 @@ class UserDto:
         'username': fields.String(required=True, description='user username'),
         'password': fields.String(required=True, description='user password'),
         'email': fields.String(required=True, description='user email address'),
-        'bio' : fields.String()
+        'bio': fields.String()
     })
 
     userInfo = api.model('userInfo', {

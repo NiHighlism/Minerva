@@ -4,12 +4,13 @@ operations such as login, logout and signup.
 
 '''
 
+from logging import getLogger
+
 from flask import abort, request
 from flask_jwt_extended import (create_access_token, create_refresh_token, decode_token, get_jwt_identity, get_raw_jwt,
                                 jwt_refresh_token_required, jwt_required)
 from flask_login import current_user, login_required
 from flask_restplus import Resource
-from logging import getLogger
 
 from app.main.service.auth_service import Authentication
 from app.main.util.dto import AuthDto, UserDto
@@ -22,6 +23,7 @@ login_info = AuthDto.login_info
 change_password = AuthDto.change_password
 
 LOG = getLogger(__name__)
+
 
 @api.route('/login')
 class UserLogin(Resource):
@@ -52,14 +54,14 @@ class RefereshJWTToken(Resource):
     def post(self):
         try:
             print(request.headers)
-            LOG.error(request.headers, exc_info = True)
+            LOG.error(request.headers, exc_info=True)
             token = request.headers['Authorization']
             user_id = decode_token(token)
             username = user_id['identity']
             response_object = {
                 'username': username,
-                'access_token': create_access_token(identity = username),
-                'refresh_token' : create_refresh_token(identity = username)
+                'access_token': create_access_token(identity=username),
+                'refresh_token': create_refresh_token(identity=username)
             }
             return response_object, 200
 
@@ -68,7 +70,7 @@ class RefereshJWTToken(Resource):
                 'status': 'fail',
                 'message': 'Could not refresh token. '
             }
-            LOG.error("Couldn't refresh token", exc_info = True)
+            LOG.error("Couldn't refresh token", exc_info=True)
             return response_object, 500
 
 

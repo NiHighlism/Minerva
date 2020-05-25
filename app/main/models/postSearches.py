@@ -36,7 +36,7 @@ def create_index(index, model):
 
     except BaseException:
         LOG.error(
-            "Elastic Search Index couldn't be create. Try again later.", exc_info=True)
+            "Elastic Search Index couldn't be created. Try again later.", exc_info=True)
         return False
 
 
@@ -77,7 +77,8 @@ def query_index(index, query, page, per_page):
             body={
                 'query': {
                     'multi_match': {
-                        'query': query
+                        'query': query,
+                        'fields': ["title^4", "tags^3", "body^1"]
                     }
                 },
                 "from": (page - 1) * per_page,
@@ -86,8 +87,9 @@ def query_index(index, query, page, per_page):
         ids = [int(hit['_id']) for hit in search['hits']['hits']]
         return ids, search['hits']['total']['value']
 
-    except Exception as e:
-        LOG.error("FUCKED UP", exc_info=True)
+    except BaseException:
+        LOG.error(f"Couldn't fetch posts with params index = {index}, \
+            query = {query}, page = {page}, per_page = {per_page}", exc_info=True)
 
 
 class SearchableMixin(object):
