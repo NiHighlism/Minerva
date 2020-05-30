@@ -1,0 +1,45 @@
+# docker-compose.yml
+version: '3'
+services:
+  db:
+    image: mariadb:latest
+    restart: always
+    environment:
+       MYSQL_DATABASE: '{$MYSQL_DATABASE}'
+       MYSQL_USER: '${MYSQL_USER}'
+       MYSQL_PASSWORD: '${MYSQL_PASSWORD}'
+       MYSQL_ROOT_PASSWORD: '${MYSQL_ROOT_PASSWORD}'
+       MYSQL_ROOT_HOST: '{MYSQL_ROOT_HOST}'
+    ports:
+      - "3306:3306"
+  
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    restart: always
+    depends_on:
+      - db
+    environment:
+      - PMA_HOST=db
+      - MYSQL_ROOT_PASSWORD=root
+    ports:
+      - 8080:80
+
+  flask: 
+    image: webapp-flask
+    env_file:
+      - .env
+    build:
+      context: .
+      dockerfile: Dockerfile-minerva
+    volumes:
+      - "./:/app" 
+  
+  nginx:
+    image: webapp-nginx
+    build:
+      context: .
+      dockerfile: Dockerfile-nginx
+    ports:
+      - 5000:80
+    depends_on:
+      - flask

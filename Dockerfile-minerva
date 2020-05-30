@@ -4,10 +4,12 @@ RUN apt-get update -y && \
     python -m pip install --upgrade setuptools wheel
 
 WORKDIR /app
+
+EXPOSE 5000
+
 COPY requirements.txt requirements.txt
-COPY app app
-COPY manage.py manage.py
+COPY . . 
 RUN pip install -r requirements.txt
+RUN pip install -e .
 
-
-ENTRYPOINT ["python", "manage.py"]
+CMD ["uwsgi", "--ini", "vidura_wsgi.ini"]
