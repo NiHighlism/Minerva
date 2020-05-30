@@ -34,7 +34,7 @@ jobs:
           key: deps9-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
       - run:
           command: |
-            python -m virtualenv env
+            python -m venv env
             . env/bin/activate
             pip install -r requirements.txt
       - save_cache:
@@ -45,6 +45,7 @@ jobs:
             - "/usr/local/lib/python3.6/site-packages"
       - run:
           command: |
+            . env/bin/activate
             ./sanity.sh
       - slack/status:
           success_message: Minerva built successfully
