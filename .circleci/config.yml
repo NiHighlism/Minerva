@@ -1,0 +1,20 @@
+version: 2.1
+
+orbs:
+  python: circleci/python@0.2.1
+
+jobs:
+  build-and-test:
+    executor: python/default
+    steps:
+      - checkout
+      - run: pip install -r requirements.txt
+      - run: pip install -e .
+      - run:
+          command: ./sanity.sh
+          name: Sanity
+
+workflows:
+  main:
+    jobs:
+      - build-and-test
