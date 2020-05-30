@@ -22,7 +22,6 @@ build/
 syphus
 *.sock
 .idea/
-*.lock
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

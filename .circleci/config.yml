@@ -4,7 +4,8 @@ version: 2.1
 # Common
 #########
 orbs:
-  
+  slack: circleci/slack@3.4.2
+
 
 ############
 # Workflows
@@ -23,12 +24,20 @@ jobs:
       - image: circleci/python:3.6.2-stretch-browsers
     steps:
       - checkout
+      - run: sudo chown -R circleci:circleci /usr/local/bin
+      - run: sudo chown -R circleci:circleci /usr/local/lib/python3.6/site-packages
+      - restore_cache: 
+          key: deps9-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
       - run:
           command: |
-            python3 -m venv env
-            . env/bin/activate
-            pip install -r requirements.txt
+            sudo pip install pipenv
+            pipenv install
+      - save_cache:
+          key: deps9-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
+          paths:
+            - ".env"
+            - "/usr/local/bin"
+            - "/usr/local/lib/python3.6/site-packages"
       - run:
           command: |
-            . env/bin/activate
-            ./sanity.sh
+            pipenv run bash ./sanity.sh
