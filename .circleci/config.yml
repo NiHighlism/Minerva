@@ -34,8 +34,9 @@ jobs:
           key: deps9-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
       - run:
           command: |
-            sudo pip install pipenv
-            pipenv install
+            python -m virtualenv env
+            . env/bin/activate
+            pip install -r requirements.txt
       - save_cache:
           key: deps9-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
           paths:
@@ -44,7 +45,7 @@ jobs:
             - "/usr/local/lib/python3.6/site-packages"
       - run:
           command: |
-            pipenv run bash ./sanity.sh
+            ./sanity.sh
       - slack/status:
           success_message: Minerva built successfully
           failure_message: Built failed, check logs.
