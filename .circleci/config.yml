@@ -6,6 +6,7 @@ version: 2.1
 orbs:
   slack: circleci/slack@3.4.2
 
+
 ############
 # Workflows
 ############
@@ -14,6 +15,9 @@ workflows:
   build-deploy:
     jobs:
       - build
+      - deploy:
+          requires:
+            - build
 
 ##################
 # Job Definitions
@@ -23,12 +27,37 @@ jobs:
     docker:
       - image: circleci/python:3.6.2-stretch-browsers
     steps:
+      - slack/notify:
+          channel: CHANNELID
+          color: '#42e2f4'
+          message: Building Minerva
       - checkout
-          command: |
-            python -m venv venv
-            . venv/bin/activate
-            pip install -r requirements.txt
+      - run: sudo chown -R circleci:circleci /usr/local/bin
+      - run: sudo chown -R circleci:circleci /usr/local/lib/python3.6/site-packages
+      - restore_cache: 
+          key: deps9-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
       - run:
           command: |
-            . venv/bin/activate
+            python -m venv env
+            . env/bin/activate
+            pip install -r requirements.txt
+      - save_cache:
+          key: deps9-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
+          paths:
+            - ".env"
+            - "/usr/local/bin"
+            - "/usr/local/lib/python3.6/site-packages"
+      - run:
+          command: |
+            . env/bin/activate
             ./sanity.sh
+      - slack/status:
+          success_message: Minerva built successfully
+          failure_message: Built failed, check logs.
+  deploy:
+    docker:
+      - image: circleci/python:3.6.2-stretch-browsers
+    steps:
+      - checkout
+      - run: ssh -oStrictHostKeyChecking=no -v $AWS_USER@$AWS_IP "/bin/sh /home/nihighlism/deploy.sh"
+      
