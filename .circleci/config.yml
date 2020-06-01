@@ -59,7 +59,7 @@ jobs:
       - image: circleci/python:3.6.2-stretch-browsers
     steps:
       - checkout
-      - run: ssh -oStrictHostKeyChecking=no -v $AWS_USER@$AWS_IP "/bin/sh /home/nihighlism/deploy.sh"
+      - run: ssh -oStrictHostKeyChecking=no -v $AWS_USER@$AWS_IP "/bin/sh /home/nihighlism/minerva/bin/deploy.sh"
       - slack/status:
           success_message: Minerva deployed successfully
           failure_message: Auto-Deploy failed, check logs. 
