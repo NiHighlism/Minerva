@@ -1,7 +1,11 @@
 cd ~/minerva
 git pull origin master
 
-export PATH="$PATH:/usr/bin:/usr/local/bin:/usr/sbin:/home/nihighlism/.pyenv/versions/minerva/bin:/home/nihighlism/.local/bin"
+eval "$( command pyenv init - )"
+export PATH="/home/nihighlism/.pyenv/bin:$PATH"
+source /home/nihighlism/.zshrc
+
+pyenv "$@"
 pyenv local minerva
 
 pip install -r requirements/common.txt
