@@ -116,6 +116,7 @@ class SignUp(Resource):
 
         return resp
 
+
 # Verify Email after signing up
 @api.route('/resendVerificationEmail')
 class SendVerificationEmail(Resource):
