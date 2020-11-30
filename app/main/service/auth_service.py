@@ -198,7 +198,7 @@ class Authentication:
                 return response_object, 403
 
             token = generate_confirmation_token(user.email)
-            subject = "Vidura: Please confirm Email Address"
+            subject = "Minerva: Please confirm Email Address"
             confirm_url = url_for('api.auth_confirm_token',
                                   token=token, _external=True)
             print("Confirmation URL for {}: {}".format(
@@ -208,7 +208,7 @@ class Authentication:
                             f"""Hey {user.username}<br/><br/>
 Please use the below link to confirm your email address.<br/></br>
 {confirm_url}<br/><br/><br/>
-Vidura""")
+Minerva""")
 
             response_object = {
                 'status': 'Success',
@@ -267,7 +267,7 @@ Vidura""")
                 return response_object, 401
             else:
                 reset_token = generate_reset_token(data.get('email'))
-                subject = "Vidura: Reset Password"
+                subject = "Minerva: Reset Password"
                 reset_url = url_for('api.auth_reset_token_verify',
                                     token=reset_token, _external=True)
                 async_send_mail(app._get_current_object(),
@@ -275,7 +275,7 @@ Vidura""")
                                 f"""Hey {user.username}<br/><br/>
 Please use the below link to reset your password.<br/></br>
 {reset_url}<br/><br/><br/>
-Vidura""")
+Minerva""")
 
             response_object = {
                 'status': 'Success',

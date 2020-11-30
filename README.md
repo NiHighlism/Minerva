@@ -1,11 +1,12 @@
-# Vidura
+# Minerva
 
-Vidura - A one-stop destination for everything Movie/TV Show Related!
-Created as part of Software Engineering Lab (CS29006) during my 4th semester (Spring 2020) - The semester that never was. 
+<p align="center">
+  <img src="https://github.com/mukul-mehta/Minerva/raw/master/assets/logo192.jpg"></img>
+</p>
 
+<hr>
 
-
-### Common Backend for Vidura
+### Common Backend for Minerva
 
 Collect all similar endpoints in the `app/controller` folder. Use different files for logically dissimilar endpoints.
 
@@ -71,37 +72,37 @@ make all
 
 ## Docker Container
 
-To build the container, make sure that the Dockerfile is present and run `docker build -t vidura:latest .`
+To build the container, make sure that the Dockerfile is present and run `docker build -t minerva:latest .`
 
-To run the application from the docker container, run `docker run vidura ARG` where `ARG` can be `db`, `run, test`, `shell` or `runserver`.
+To run the application from the docker container, run `docker run minerva ARG` where `ARG` can be `db`, `run, test`, `shell` or `runserver`.
 
 For more information, run `docker run common-backend --help`.
 
 
 
-## Setting up DB Migrations  
+## Setting up DB Migrations
 
 ### First Time With Flask-Migrate
 
-If this is the first time that flask-migrate is being installed or run alongside existing database, use the 
+If this is the first time that flask-migrate is being installed or run alongside existing database, use the
 following command to create a head stamp in your database:<br>
-`python manage.py db stamp head`  
+`python manage.py db stamp head`
 
 
 
-If the `migrations` folder doesn't exist, use the following command before the above command. 
+If the `migrations` folder doesn't exist, use the following command before the above command.
 
 `python manage.py db init`
 
 ### Applying Schema Update On Existing Database
 
 It is recommended to perform Database upgrades, whenever database schema is updated, using the below commands:<br>
-`python manage.py db upgrade`  
+`python manage.py db upgrade`
 
 ### Removing Last Schema Update On Existing Database
 
 Remove the last database update using the below commands:<br>
-`python manage.py db downgrade`  
+`python manage.py db downgrade`
 
 ### Updating Schema
 
